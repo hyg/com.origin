@@ -4,9 +4,9 @@
 ###com vs. cod
 1. com是利益共同体**模型**的简称，它通常是一个数学模型。  
 
-	>com = COmunity Model
+	>com = COmmunity Model
 2. cod是指一个利益共同体的**实例**，部署cod包括开发软件、起草法律文件等等工作。
-	>cod = COmunity Deployment
+	>cod = COmmunity Deployment
 
 3. 一个模型可以部署许多实例。原则上，部署者在不改变模型的前提下可以任意决定cod的细节。实际习惯上，建模者会界定一系列部署参数，部署者只决定这些参数的话，各cod之间更容易交互。
 	>比如：  
