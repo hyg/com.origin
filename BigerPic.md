@@ -3,6 +3,7 @@
 
 ###com vs. cod
 1. com是利益共同体**模型**的简称，它通常是一个数学模型。  
+
 	>com = COmunity Model
 2. cod是指一个利益共同体的**实例**，部署cod包括开发软件、起草法律文件等等工作。
 	>cod = COmunity Deployment
