@@ -4,9 +4,10 @@
 
 ###cod运行机制
 1. 以未来的产品和服务抵押，发行codcoin。
-2. 用codcoin购买成员的timecoin。
-3. 把timecoin绑定在工单上发给成员，调度大家制造产品和服务。
-4. com就是定义以上过程的数学模型。
+2. 用codcoin支付成员的工作，调度大家制造产品和服务：
+	1. 对于timecoin价值稳定的成员，直接以codcoin购买成员的timecoin。把timecoin绑定在工单上发给成员。
+	2. 对于一般成员，把任务打包签约，根据契约分发工单，验收成果后支付codcoin。
+3. com就是定义以上过程的数学模型。
 
 ###cod部署
 1. 无中心的cod部署方案，具体体现为一系列的cod node（以下简称node）。各node的差异只有ini配置文件，执行文件是相同的（至少API是兼容的）。
@@ -44,7 +45,8 @@ TBD
 5. 由于数据结构是公开的，rsa密钥对可以导入导出（coin模块也可以开源），因此其它软件也可以实现coin模块的功能。
  
 ####timecoin
-1. 每个node均可发行timecoin。
+1. 每个node均可发行timecoin。通常只有具备独立服务能力的用户，其timecoin才有稳定的价值。
+	>比如某教师可以参与教材编写，也可以单独提供辅导服务。当他的辅导服务供不应求时，timecoin持有者随时可以兑现，其课时费即可作为timecoin的定价依据。
 2. timecoin的数据结构主要内容：
 	- timecoin tag：标识这是一个timecoin。
 	- timecoin id：全局唯一编号。
