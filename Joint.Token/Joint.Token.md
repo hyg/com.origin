@@ -49,23 +49,60 @@
 	2. 数据说明：同自动账户。
 
 ###转账Transfer
-1. 用途：
+1. 用途：用于存放任何用途的转账，支付方支付总金额等于各接收方收款金额之和。
 2. 账目数据结构：
-	> {data:{"JTID":"xxxx","Type":"Transfer","Sender":"yyyy","Receiver":"zzzz","Amount":aaa.bb,"Time":"yyyy-mm-dd hh-mm-ss"},"sig":"ssss"}
-
+	> {data:{"JTID":"xxxx","Type":"Transfer","Sender":"yyyy","Receiver":["ID":"zzzz","Amount":aaa.bb],"Time":"yyyy-mm-dd hh-mm-ss"},"sig":"ssss"}
 3. 数据说明
 	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
 	- yyyy：支付方的账户ID。
 	- zzzz：接收方的账户ID。
-	- aa.bb：转账金额。
+	- aa.bb：收款金额。
 	- yyyy-mm-dd hh-mm-ss：转账时间。
 	- ssss：data的数字签名。
-4. 范例
 
 ###发行Issue
+1. 用途：用于发行新JT，表现为只有接收方没有支付方。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。
+2. 账目数据结构：
+	> {data:{"JTID":"xxxx","Type":"Issue","Param":"pppp","Receiver":["ID":"zzzz","Amount":aaa.bb],Time":"yyyy-mm-dd hh-mm-ss"}}
+3. 数据说明
+	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- pppp：发行算法的参数。其中应包括酬劳接收者的ID和金额，算法会检查是否合法。
+	- zzzz：接收方的账户ID。其中之一是JTID即根账户的ID，其余的是领取酬劳者的ID。
+	- aa.bb：收款金额。总和就是发行金额。
+	- yyyy-mm-dd hh-mm-ss：发行时间。
 
+###销毁Destruction
+1. 用途：用于销毁JT，表现为只有支付方和酬劳接收方。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。
+2. 账目数据结构：
+	> {data:{"JTID":"xxxx","Type":"Destruction","Param":"pppp","Sender":["ID":"yyyy","Amount":aaa.bb],"Receiver":["ID":"zzzz","Amount":aaa.bb],Time":"yyyy-mm-dd hh-mm-ss"}}
+3. 数据说明
+	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- pppp：发行算法的参数。其中应包括酬劳接收者的ID和金额，算法会检查是否合法。
+	- yyyy：支付方的账户ID。将从这些账户中销毁JT。
+	- zzzz：领取酬劳者的ID。
+	- aa.bb：销毁金额和酬劳。
+	- yyyy-mm-dd hh-mm-ss：发行时间。
 
 ###交易Exchange
-
+1. 用途：用于交换，目前是不同JT之间的兑换，该数据会写入两种JT的账目存储。今后逐步扩展其它软件可以自动处理的数字资产交易。
+2. 账目数据结构：
+	> {"data":{"data1":{"JTID":"xxxx","Type":"Exchange","Sender":"yyyy","Receiver":["ID":"zzzz","Amount":aaa.bb],"Time":"yyyy-mm-dd hh-mm-ss"},"data2":{"JTID":"xxxx","Type":"Exchange","Sender":"yyyy","Receiver":["ID":"zzzz","Amount":aaa.bb],"Time":"yyyy-mm-dd hh-mm-ss"}},"sig1":"ssss","sig2":"ssss"}
+3. 数据说明
+	- xxxx：JT种类的ID。这里有两种JT，各有不同的ID。
+	- yyyy：支付方的账户ID。每种JT有一个支付方。
+	- zzzz：接收方的账户ID。每种JT有一个或多个接收方。
+	- aa.bb：每个接收方的收款金额。
+	- yyyy-mm-dd hh-mm-ss：交易时间。data1和data2应该相同。
+	- ssss：data的数字签名。交易双方的支付者应该向对方提供数字签名。
 
 ###分配Alloc
+1. 用途：用于利益共同体支付报酬、分配利润等操作。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。
+2. 账目数据结构：
+	> {data:{"JTID":"xxxx","Sender":"yyyy","Type":"Alloc","Param":"pppp","Receiver":["ID":"zzzz","Amount":aaa.bb],Time":"yyyy-mm-dd hh-mm-ss"}}
+3. 数据说明
+	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- yyyy：自动账户的ID，通常是某个利益共同体的分配源代码的数字摘要。
+	- pppp：分配算法的参数。其中应包括酬劳接收者的ID和金额，算法会检查是否合法。
+	- zzzz：接收方的账户ID。包括领取酬劳者的ID。
+	- aa.bb：收款金额。总和就是分配金额。
+	- yyyy-mm-dd hh-mm-ss：分配时间。
