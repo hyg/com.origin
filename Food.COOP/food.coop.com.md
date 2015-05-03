@@ -178,4 +178,4 @@ Food COOP
 	1. Boot->Lab:
 	2. Lab->COOP:
 	3. COOP->COOPs:
-2. 
+2. .
