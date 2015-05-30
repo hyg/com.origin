@@ -15,34 +15,95 @@
 7. 原生交易和分配机制，无需借助外部规则实现数字资产的交易、软件法人的财产。
 
 ###技术思路
-1. 账目存储：假设全局账目可以安全地读写，设计可以切换具体方案的模块化接口，范例可以json格式展示，范例代码可以读写文件方式实现。
+1. 账目存储：假设全局账目可以安全地读写，设计可以切换具体方案的模块化接口，范例可以yaml格式展示，范例代码可以读写文件方式实现。
 	<table>
 	<tr><th>方案</th><th>优点</th><th>缺点</th></tr>
+	<tr><td>中心服务器</td><td>经过实际验证的成熟方案，无须用户节点在线。</td><td>容易被攻击，有成本。</td></tr>
 	<tr><td>数字货币区链块</td><td>经过实际验证的成熟方案</td><td>需要一直有在线节点。“挖矿”有成本。</td></tr>
 	<tr><td>docker</td><td>不需要一直有在线节点，借助现成镜像管理功能建立账目，有可能无需“挖矿”。</td><td>最新镜像定位、index服务器中心化、分支合并等问题。</td></tr>
 	<tr><td>基于七牛等存储服务商</td><td>不需要一直有在线节点，安全和带宽有专业服务</td><td>需要只增不删的扩展方案，有成本，服务商中细化等问题。</td></tr>
 	<tr><td>基于git</td><td>不需要一直有在线节点，明账免费，一定程度上无中心。</td><td>需要只增不删的扩展方案。</td></tr>
+	<tr><td>基于DHT</td><td>不需要一直有在线节点，明账免费，无中心。</td><td>需要只增不删的扩展方案，旧数据可能失效。</td></tr>
 	</table>
-2. 假设任何时期有当时安全的数字签名算法。设计可以切换签名算法的模块化接口，范例以rsa算法实现数字签名。
-3. 增加以算法定义的账户，实现规则已知的交易和分配功能。对应操作的账目不是以数字签名保证其合法性，而是以{算法ID，操作ID，输入条件}来保证其合法性。比如{某利益共同体的主账户ID，年终分配操作ID，2014-12-31-24:00:00}可以定义一组支出账目，任何一方可以运行指定算法验证其合法性，从而决定是否允许这组账目写入存储（实际上是决定是否使用写入后的总账，还是使用其写入前的）。算法定义应能切换不同的编程语言，由于二进制执行文件随操作系统而变化，解释型语言才能保持一致的数字签名，范例以js实现。
+2. 假设任何时期有当时安全的数字签名算法。设计可以切换签名算法的模块化接口，范例以openpgp算法实现数字签名。
+3. 增加以算法定义的账户，实现规则已知的交易和分配功能。对应操作的账目不是以数字签名保证其合法性，而是以{算法ID，操作ID，输入条件}来保证其合法性。比如{某利益共同体的主账户ID，年终分配操作ID，2014-12-31 24:00:00}可以定义一组支出账目，任何一方可以运行指定算法验证其合法性，从而决定是否允许这组账目写入存储（实际上是决定是否使用写入后的总账，还是使用其写入前的）。算法定义应能切换不同的编程语言，由于二进制执行文件随操作系统而变化，解释型语言才能保持一致的数字签名，范例以js实现。
+
+###功能
+1. 发行
+	1. 计划内发行
+	2. 计划外发行
+2. 预售/预购
+3. 贷款/偿还
+4. 
 
 ###账户
 1. 普通账户：以公钥（或其经过一组计算后的结果）作为账户ID。该密钥对用于账户相关数字签名。
 	1. 账户定义数据结构：
-		> {"Account":{"Type":"normal","ID":"xxxx","PubKey":"kkkkkkkk","CreateTime":"yyyy-mm-dd hh-mm-ss","Remark":"rrrr"}}
-	2. 数据说明：
-		- xxxx：账户ID。
-		- kkkkkkkk：完整的公钥。
-		- yyyy-mm-dd hh-mm-ss：创建日期。
-		- rrrr：备注文本。
+		- id: 账户ID。
+		- keytype: 密钥类型。
+			- 1:rsa
+			- 2:openpgp
+		- pubkey: 完整的公钥。
+		- createtime: 账户创建时间。
+		- remark: 备注文本。
+	2. 范例：
+		<pre>
+		id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
+		keytype: 2
+		pubkey: |-
+		  -----BEGIN PGP PUBLIC KEY BLOCK-----
+		  Version: OpenPGP.js v0.9.0
+		  Comment: http://openpgpjs.org
+		
+		  xsBNBFSlVgcBCACQURxJMfdrPbAFa5ZGOs4j43tRmc7KQoM6lKveobO+v+Jg
+		  IIYqXtDadXAM1h34CQgwj4o7VFKf+M1SmGbO57cx+M3U1+SgKmW9w8gRwgNE
+		  q+m3JPo+HIiOI/X8Gsa9vrbAbs19UvXk4H+CdC02bxwruLPan87fI17wGLEB
+		  62mcLG9eNPg4XrmZDDISPvicR88AFmkZMPh9WoVm99jzKl3EWCfPXqdNiLWK
+		  kzXZO2jPLXLb2iJRacq2i+QXt5UWB5BEaAHLLVLTu5PNykHumN0xxIoidrxV
+		  G+ug8Z269ZmcYdRv2fgY/TYP+/h43RkSI+iqiXeKSL8+WGDqSpee9sPnABEB
+		  AAHNMOa1i+ivlei0puWPtyAoaHlnL2pzLnNhbXBsZSkgPHRlc3RAanNzYW1w
+		  bGUub3JnPsLAcgQQAQgAJgUCVKVWDwYLCQgHAwIJEE5QeumSjbLwBBUIAgoD
+		  FgIBAhsDAh4BAADijgf/e24fcRYoEZlIrej5ZblOszkKV7Y2900NerwrLPFK
+		  kfQVHOBSAi9Nls5rOlZ4jDi7rd8/V+NUDDqE966jMha6TpCnHd+j6I4tiJiq
+		  I8n51FoctVcpJcadygcoZE18pGF+dl62o7iLJVqsQv6ZnbLTQJngPDjAQGG8
+		  KKhJjpY2RYNnR8vBCb4+lH8lhBnXviUUyyFRBjbBdhiPVebvv/LGd60diEmJ
+		  +xKC89+Z0bGdElPpVW2WdOkTXL47UoNfZpHzpxhytOmjAykxGFtaqtUmHzvN
+		  KogM5YDXuO7ZcWjiiTbKSnLcYyWLBp8VGq+MdDQmIEV7YpE3/mWPHat0wZar
+		  X87ATQRUpVYMAQgAogdxHIK2i4MMeV2DASacwP037GCqyLHRcmo1ud5IYkHd
+		  WXs1xigEklj2+3AaWjYgHzhN/f5BE2aDFttSonJhQ+ltZrEArungIWppSfN+
+		  v6SyzmUsYK8EooF1M/EckvyF3ugub+SGst4MXyGfYhx901oRvKhY61pFWgZP
+		  3gs/P1nHbDpUYNDKENflVBV0ha2DSlLxFQdfSh4hh4Jm1icmw85V5gTwppQd
+		  CQ//qGZ757Tq4AtZS9givMYnSkXFsSlufKZ8LTVa/RFZ+gGKbcJHMR8XLoOc
+		  8n8Vge92GHm63W5mP33A99e+NgyegInLmoi3lIXGO8yORIdwci17Eaqa9QAR
+		  AQABwsBfBBgBCAATBQJUpVYQCRBOUHrpko2y8AIbDAAAmiAIAIHhfGiJ9e9L
+		  n8z9tD/BFzqk5vll36hCXkLdg2HzftJsxPdW0eT27iDLagJcsrbVpRAag49/
+		  47GH9BeHdtqsDNsh7UzQAlfp4t7+Fi00+9GuazHtTnI1bN9zgpGLCCNP6JUR
+		  J9Z00c+GhQayTkPwTCf9zCidtbbNJc7GRlfgOMaoNqGoasyZrltqoB6hCM16
+		  l0jkh59MIqQ+4FbLQOqr/7SGi6H1wzFa/Q4Q9R2VDg5zlEg163pbsf+ope52
+		  3rPxBia7vxpFfXQXGbtR6vZDjI8uqsEMEyflqiuHJxmjtitnYLRqxQRr9fZq
+		  WMc+ZlpNrplXO9WkeuhEICGQdZSy/ok=
+		  =+yKz
+		  -----END PGP PUBLIC KEY BLOCK-----
+		createtime: 2015-05-30 15:16:37
+		remark: Account Sample
+		</pre>
 2. 自动账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID。这组源代码定义了所有支出操作，对每种操作定义了激发条件和内部唯一的操作ID。自动账户由利益共同体使用，每次规则升级将产生不同的自动账户。
 	1. 账户定义数据结构：
-		> {"Account":{"Type":"auto","ID":"xxxx","SourceFile":"ffff","CreateTime":"yyyy-mm-dd hh-mm-ss","Remark":"rrrr"}}
-	2. 数据说明：
-		- xxxx：账户ID，是源代码文件的数字摘要。
-		- ffff：完整的源代码，通常客户端会自动下载到本地，每次使用前验证数字摘要。
-		- yyyy-mm-dd hh-mm-ss：创建日期。
-		- rrrr：备注文本。
+		- id: 账户ID。
+		- codetype: 源代码类型。
+			- 1:js
+			- 2:lua
+		- codeurl: 源代码路径。
+		- createtime: 账户创建时间。
+		- remark: 备注文本。
+	2.  范例：
+		<pre>
+			id: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+			codetype: 1
+			codeurl: raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js
+			createtime: 2015-05-30 16:07:43
+			remark: Account Sample
+		</pre>
 3. 根账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID，同时也是这种JT的ID。这组源代码定义了所有发行和销毁操作，对每种操作定义了激发条件和内部唯一的操作ID。根账户由JT使用，每次发行和销毁规则升级将产生不同的根账户，实质上产生新种类的JT。
 	1. 账户定义数据结构：
 		> {"Account":{"Type":"root","ID":"xxxx","SourceFile":"ffff","CreateTime":"yyyy-mm-dd hh-mm-ss","Remark":"rrrr"}}
