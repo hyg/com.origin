@@ -69,9 +69,25 @@ const (
 	lua
 )
 
+type RootAccount struct {
+	ID               string
+	IssueCodeType    int
+	IssueCodeUrl     string
+	TempIssueType    int
+	TempIssueCodeUrl string
+	DeployerPubkey   string
+	CreateTime       string
+	Remark           string
+}
+
+const (
+	code = 1 + iota
+	trust
+)
+
 func main() {
 
-	MakeAutoAccount()
+	MakeRootAccount()
 }
 
 func MakeNormalAccount() {
@@ -93,4 +109,13 @@ func MakeAutoAccount() {
 
 	d, _ := yaml.Marshal(&aa)
 	log.Printf("--- AutoAccount:\n%s\n\n", string(d))
+}
+
+func MakeRootAccount() {
+	mdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
+
+	ra := RootAccount{mdStr, js, "raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js", trust, "", pubkey, time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
+
+	d, _ := yaml.Marshal(&ra)
+	log.Printf("--- RootAccount:\n%s\n\n", string(d))
 }

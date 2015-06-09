@@ -3,7 +3,7 @@ Joint Token
 
 ###概述
 1. 联合提货权（Joint Token，以下简称**JT**）是P2级别利益共同体（以下简称“**部署者**”）部署的一种记账单位。
-2. 符合以下全部条件的利益共同体是联合提货权的**普通使用者**，不符合全部条件的是“**有限使用者**”：
+2. 符合以下全部条件的利益共同体是联合提货权的**普通使用者**，不符合全部条件的是**有限使用者**：
 	* 只使用联合提货权报价
 	* 只接受联合提货权购买产品和服务
 	* 只发放联合提货权作为报酬
@@ -38,8 +38,8 @@ Joint Token
 		1. 开发基金：支付建模、设计、开发、运维、管理等人员和设备设置费用。
 		2. 孵化基金：向普通使用者发放贷款和预购产品。
 	2. 计划外发行：以特定卖出价出售任意数额的联合提货权，收入扣除管理费用后全部按特定买入价在兑换处挂单。
-		1. 源代码模式：由源代码计算出卖出价、买入价、管理费用。
-		2. 基金会模式：由联合提货权部署者制定管理规则、规定管理费用、选派管理人员，由管理团队按规则制定卖出价、买入价。其它操作均由软件自动完成。部署者的权利通过密钥和签名实现。
+		1. 代码模式：由源代码计算出卖出价、买入价、管理费用。
+		2. 信托模式：由联合提货权部署者作为委托方，制定管理规则、规定管理费用、选择受托方。由受托方按规则制定卖出价、买入价。其它操作均由软件自动完成。部署者的权利通过密钥和签名实现。
 2. 预售/预购/提货/兑现：普通使用者可以提出预售，任何使用者可以预购、提货、兑现。具体规则由部署者制定并实现。
 3. 贷款/还款：普通使用者可以申请贷款，孵化基金和其他使用者均可放贷。由软件自动按期还款。
 4. 导师：普通使用者可以购买辅导服务，辅导者即成为**导师**。导师除了可以按辅导协议收费外，在每次预售开始前提交的预购，拥有优先权。
@@ -54,7 +54,7 @@ Joint Token
 		- pubkey: 完整的公钥。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。
-	2. 范例：
+	2. yaml范例：
 		<pre>
 		id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
 		keytype: 2
@@ -104,7 +104,7 @@ Joint Token
 		- codeurl: 源代码路径。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。
-	2.  范例：
+	2.  yaml范例：
 		<pre>
 			id: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
 			codetype: 1
@@ -114,8 +114,62 @@ Joint Token
 		</pre>
 3. 根账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID，同时也是这种JT的ID。这组源代码定义了所有发行和销毁操作，对每种操作定义了激发条件和内部唯一的操作ID。根账户由JT使用，每次发行和销毁规则升级将产生不同的根账户，实质上产生新种类的JT。
 	1. 账户定义数据结构：
-		> {"Account":{"Type":"root","ID":"xxxx","SourceFile":"ffff","CreateTime":"yyyy-mm-dd hh-mm-ss","Remark":"rrrr"}}
-	2. 数据说明：同自动账户。
+		- id: 账户ID。
+		- issuecodetype: 计划内发行源代码类型。
+			- 1:js
+			- 2:lua
+		- issuecodeurl: 计划内发行源代码路径。
+		- tempissuetype:
+			- 1:code
+			- 2:trust
+		- tempissuecodeurl:计划外发行代码。
+		- deployerpubkey：部署者公钥，也是计划外发行的委托方公钥。
+		- createtime: 账户创建时间。
+		- remark: 备注文本。
+	2. yaml范例：
+		<pre>
+			id: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+			issuecodetype: 1
+			issuecodeurl: raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js
+			tempissuetype: 2
+			tempissuecodeurl: ""
+			deployerpubkey: |-
+			  -----BEGIN PGP PUBLIC KEY BLOCK-----
+			  Version: OpenPGP.js v0.9.0
+			  Comment: http://openpgpjs.org
+			
+			  xsBNBFSlVgcBCACQURxJMfdrPbAFa5ZGOs4j43tRmc7KQoM6lKveobO+v+Jg
+			  IIYqXtDadXAM1h34CQgwj4o7VFKf+M1SmGbO57cx+M3U1+SgKmW9w8gRwgNE
+			  q+m3JPo+HIiOI/X8Gsa9vrbAbs19UvXk4H+CdC02bxwruLPan87fI17wGLEB
+			  62mcLG9eNPg4XrmZDDISPvicR88AFmkZMPh9WoVm99jzKl3EWCfPXqdNiLWK
+			  kzXZO2jPLXLb2iJRacq2i+QXt5UWB5BEaAHLLVLTu5PNykHumN0xxIoidrxV
+			  G+ug8Z269ZmcYdRv2fgY/TYP+/h43RkSI+iqiXeKSL8+WGDqSpee9sPnABEB
+			  AAHNMOa1i+ivlei0puWPtyAoaHlnL2pzLnNhbXBsZSkgPHRlc3RAanNzYW1w
+			  bGUub3JnPsLAcgQQAQgAJgUCVKVWDwYLCQgHAwIJEE5QeumSjbLwBBUIAgoD
+			  FgIBAhsDAh4BAADijgf/e24fcRYoEZlIrej5ZblOszkKV7Y2900NerwrLPFK
+			  kfQVHOBSAi9Nls5rOlZ4jDi7rd8/V+NUDDqE966jMha6TpCnHd+j6I4tiJiq
+			  I8n51FoctVcpJcadygcoZE18pGF+dl62o7iLJVqsQv6ZnbLTQJngPDjAQGG8
+			  KKhJjpY2RYNnR8vBCb4+lH8lhBnXviUUyyFRBjbBdhiPVebvv/LGd60diEmJ
+			  +xKC89+Z0bGdElPpVW2WdOkTXL47UoNfZpHzpxhytOmjAykxGFtaqtUmHzvN
+			  KogM5YDXuO7ZcWjiiTbKSnLcYyWLBp8VGq+MdDQmIEV7YpE3/mWPHat0wZar
+			  X87ATQRUpVYMAQgAogdxHIK2i4MMeV2DASacwP037GCqyLHRcmo1ud5IYkHd
+			  WXs1xigEklj2+3AaWjYgHzhN/f5BE2aDFttSonJhQ+ltZrEArungIWppSfN+
+			  v6SyzmUsYK8EooF1M/EckvyF3ugub+SGst4MXyGfYhx901oRvKhY61pFWgZP
+			  3gs/P1nHbDpUYNDKENflVBV0ha2DSlLxFQdfSh4hh4Jm1icmw85V5gTwppQd
+			  CQ//qGZ757Tq4AtZS9givMYnSkXFsSlufKZ8LTVa/RFZ+gGKbcJHMR8XLoOc
+			  8n8Vge92GHm63W5mP33A99e+NgyegInLmoi3lIXGO8yORIdwci17Eaqa9QAR
+			  AQABwsBfBBgBCAATBQJUpVYQCRBOUHrpko2y8AIbDAAAmiAIAIHhfGiJ9e9L
+			  n8z9tD/BFzqk5vll36hCXkLdg2HzftJsxPdW0eT27iDLagJcsrbVpRAag49/
+			  47GH9BeHdtqsDNsh7UzQAlfp4t7+Fi00+9GuazHtTnI1bN9zgpGLCCNP6JUR
+			  J9Z00c+GhQayTkPwTCf9zCidtbbNJc7GRlfgOMaoNqGoasyZrltqoB6hCM16
+			  l0jkh59MIqQ+4FbLQOqr/7SGi6H1wzFa/Q4Q9R2VDg5zlEg163pbsf+ope52
+			  3rPxBia7vxpFfXQXGbtR6vZDjI8uqsEMEyflqiuHJxmjtitnYLRqxQRr9fZq
+			  WMc+ZlpNrplXO9WkeuhEICGQdZSy/ok=
+			  =+yKz
+			  -----END PGP PUBLIC KEY BLOCK-----
+			createtime: 2015-06-09 14:42:10
+			remark: Account Sample
+		</pre>
 
 ###转账Transfer
 1. 用途：用于存放任何用途的转账，支付方支付总金额等于各接收方收款金额之和。
