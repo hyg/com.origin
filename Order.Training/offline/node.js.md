@@ -67,37 +67,65 @@
 5. 模块内不要打印任何数据，只能通过主程序输出信息。模块内不要改变任何全局变量。
 6. 主程序的回调函数如果收到错误信息，直接打印到标准输出设备（stdout）就行。
 7. [模块参考文档](https://nodejs.org/docs/latest/api/modules.html)
+8. 提示：模块只导出一个函数的语法
+	<pre>
+	module.exports = function (args) { /* ... */ }
+	</pre>
+9. 提示：使用自定义模块的语法
+	<pre>
+	var mymodule = require('./mymodule.js')
+	</pre>
 
 ####任务八：http客户端
-开发一个使用GET方法访问服务器的客户端，把服务器返回结果显示出来。
+1. 开发一个js程序，它向第一个命令行调用参数指定的url发送http get请求。
+2. 把每个data返回值的总字节数打印到标准输出设备上。
+3. 把每个data返回值的内容合并起来，打印到标准输出设备上。
+4. 提示：data返回值可以使用这个语法在回调函数内获得
+	<pre>
+	response.on("data",function (data){ /* ... */ });
+	</pre>
 
 ####任务九：时间服务器
-开发一个服务器，对TCP连接返回当前时间，格式为： "YYYY-MM-DD hh:mm"。
+1. 开发一个服务器监听来自指定端口的TCP连接。
+2. 所监听额端口由第一个命令行调用参数指定。
+3. 对每一个TCP连接返回当前时间，格式为： "YYYY-MM-DD hh:mm"，后面跟一个回车。
+4. 时间中的月、日、时、分都是0填充的两位数。
 
 ####任务十：文件服务器
-开发一个服务器，对HTTP连接返回服务器端的文件内容。
+1. 开发一个HTTP服务器。
+2. 服务器监听第一个命令行调用参数指定的端口。
+3. 服务器将第二个命令行调用参数指定的文件内容返回给客户端。
 
 ####任务十一：POST服务器
-开发一个服务器，把HTTP POST连接的body转成大写后返回给客户端。
+1. 开发一个HTTP服务器，它只回应POST请求。
+2. 服务器把HTTP POST连接的body转成大写后返回给客户端。
 
 ####任务十二：JSON服务器
-开发一个服务器，提供两个API，客户端以iso参数送来一个时间，例如：  
-<pre>
-/api/parsetime?iso=2013-08-10T12:10:15.474Z
-</pre>
+1. 开发一个HTTP服务器，提供两个API。
+2. /api/parsetime：
+	* 客户端以iso参数送来一个时间，例如：  
+	<pre>
+	/api/parsetime?iso=2013-08-10T12:10:15.474Z
+	</pre>
+	* 返回iso参数的时、分、秒，格式为：
+	<pre>
+	{
+	  "hour": 14,
+	  "minute": 23,
+	  "second": 15
+	}
+	</pre>
 
-* /api/parsetime：返回iso参数的时分秒，格式为：
-<pre>
-{
-  "hour": 14,
-  "minute": 23,
-  "second": 15
-}
-</pre>
-* /api/unixtime ：返回iso参数的unix格式：
-<pre>
-{ "unixtime": 1376136615474 }
-</pre>
+3. /api/unixtime ：
+	* 客户端以iso参数送来一个时间，例如：  
+	<pre>
+	/api/unixtime?iso=2013-08-10T12:10:15.474Z
+	</pre>
+	* 返回iso参数的unix格式：
+	<pre>
+	{ "unixtime": 1376136615474 }
+	</pre>
+4. 服务器监听的端口由第一个命令行调用参数提供。
 
 ###面授模式
 ###在线模式
