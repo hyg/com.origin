@@ -174,14 +174,25 @@ Joint Token
 ###转账Transfer
 1. 用途：用于存放任何用途的转账，支付方支付总金额等于各接收方收款金额之和。
 2. 账目数据结构：
-	> {data:{"JTID":"xxxx","Type":"Transfer","Sender":"yyyy","Receiver":["ID":"zzzz","Amount":aaa.bb],"Time":"yyyy-mm-dd hh-mm-ss"},"sig":"ssss"}
-3. 数据说明
-	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
-	- yyyy：支付方的账户ID。
-	- zzzz：接收方的账户ID。
-	- aa.bb：收款金额。
-	- yyyy-mm-dd hh-mm-ss：转账时间。
-	- ssss：data的数字签名。
+	- jtid：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- input：一个数组，包括每一个支付方的账户ID和支付金额。
+	- output：一个数组，包括每一个接收方的账户ID和接收金额。
+	- total：收支总金额。
+	- time：转账时间。
+3. 范例：
+<pre>
+	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	input:
+	- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
+	  amount: 1.05
+	output:
+	- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+	  amount: 1
+	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+	  amount: 0.05
+	total: 1.05
+	time: 2015-06-13 16:38:11
+</pre>
 
 ###发行Issue
 1. 用途：用于发行新JT，表现为只有接收方没有支付方。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。

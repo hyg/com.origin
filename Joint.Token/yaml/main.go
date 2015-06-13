@@ -85,9 +85,22 @@ const (
 	trust
 )
 
+type Amount struct {
+	ID     string
+	Amount float64
+}
+
+type Transfer struct {
+	JTID   string
+	Input  []Amount
+	Output []Amount
+	Total  float64
+	Time   string
+}
+
 func main() {
 
-	MakeRootAccount()
+	MakeTransfer()
 }
 
 func MakeNormalAccount() {
@@ -118,4 +131,18 @@ func MakeRootAccount() {
 
 	d, _ := yaml.Marshal(&ra)
 	log.Printf("--- RootAccount:\n%s\n\n", string(d))
+}
+
+func MakeTransfer() {
+	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
+	hash := sha256.New()
+	hash.Write([]byte(pubkey))
+	md := hash.Sum(nil)
+	NmdStr := hex.EncodeToString(md)
+	Amdstr1 := "53fd8ea011483ce70a16332d877d6efd5bafb369"
+	Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
+
+	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05")}
+	d, _ := yaml.Marshal(&tf)
+	log.Printf("--- Transger:\n%s\n\n", string(d))
 }
