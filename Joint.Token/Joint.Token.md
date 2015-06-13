@@ -115,13 +115,13 @@ Joint Token
 3. 根账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID，同时也是这种JT的ID。这组源代码定义了所有发行和销毁操作，对每种操作定义了激发条件和内部唯一的操作ID。根账户由JT使用，每次发行和销毁规则升级将产生不同的根账户，实质上产生新种类的JT。
 	1. 账户定义数据结构：
 		- id: 账户ID。
-		- issuecodetype: 计划内发行源代码类型。
+		- sourcecodetype: 源代码类型。
 			- 1:js
 			- 2:lua
-		- issuecodeurl: 计划内发行源代码路径。
-		- tempissuetype:
-			- 1:code
-			- 2:trust
+		- sourcecodeurl: 源代码路径。
+		- buftype: 计划外发行模式
+			- 1:code		代码模式
+			- 2:trust	信托模式
 		- tempissuecodeurl:计划外发行代码。
 		- deployerpubkey：部署者公钥，也是计划外发行的委托方公钥。
 		- createtime: 账户创建时间。
@@ -129,10 +129,9 @@ Joint Token
 	2. yaml范例：
 		<pre>
 			id: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
-			issuecodetype: 1
-			issuecodeurl: raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js
-			tempissuetype: 2
-			tempissuecodeurl: ""
+			sourcecodetype: 1
+			sourcecodeurl: raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js
+			buftype: 2
 			deployerpubkey: |-
 			  -----BEGIN PGP PUBLIC KEY BLOCK-----
 			  Version: OpenPGP.js v0.9.0
@@ -167,7 +166,7 @@ Joint Token
 			  WMc+ZlpNrplXO9WkeuhEICGQdZSy/ok=
 			  =+yKz
 			  -----END PGP PUBLIC KEY BLOCK-----
-			createtime: 2015-06-09 14:42:10
+			createtime: 2015-06-13 21:06:31
 			remark: Account Sample
 		</pre>
 
@@ -179,6 +178,7 @@ Joint Token
 	- output：一个数组，包括每一个接收方的账户ID和接收金额。
 	- total：收支总金额。
 	- time：转账时间。
+	- remark：备注。
 3. 范例：
 <pre>
 	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
@@ -191,31 +191,53 @@ Joint Token
 	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
 	  amount: 0.05
 	total: 1.05
-	time: 2015-06-13 16:38:11
+	time: 2015-06-13 21:38:59
+	remark: sample
 </pre>
 
 ###发行Issue
 1. 用途：用于发行新JT，表现为只有接收方没有支付方。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。
 2. 账目数据结构：
-	> {data:{"JTID":"xxxx","Type":"Issue","Param":"pppp","Receiver":["ID":"zzzz","Amount":aaa.bb],Time":"yyyy-mm-dd hh-mm-ss"}}
-3. 数据说明
-	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
-	- pppp：发行算法的参数。其中应包括酬劳接收者的ID和金额，算法会检查是否合法。
-	- zzzz：接收方的账户ID。其中之一是JTID即根账户的ID，其余的是领取酬劳者的ID。
-	- aa.bb：收款金额。总和就是发行金额。
-	- yyyy-mm-dd hh-mm-ss：发行时间。
+	- jtid：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- input：空数组，为了和transfer兼容。
+	- output：一个数组，包括每一个接收方的账户ID和接收金额。
+	- total：发行总金额。
+	- time：发行时间。
+	- remark：备注。
+3. 范例：
+<pre>
+	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	input: []
+	output:
+	- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+	  amount: 1
+	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+	  amount: 0.05
+	total: 1.05
+	time: 2015-06-13 21:42:37
+	remark: sample
+</pre>
 
 ###销毁Destruction
 1. 用途：用于销毁JT，表现为只有支付方和酬劳接收方。创建账目者可以获得报酬，但只有符合条件的第一个账目数据会被接受，其余的会被丢弃。
 2. 账目数据结构：
-	> {data:{"JTID":"xxxx","Type":"Destruction","Param":"pppp","Sender":["ID":"yyyy","Amount":aaa.bb],"Receiver":["ID":"zzzz","Amount":aaa.bb],Time":"yyyy-mm-dd hh-mm-ss"}}
-3. 数据说明
-	- xxxx：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
-	- pppp：发行算法的参数。其中应包括酬劳接收者的ID和金额，算法会检查是否合法。
-	- yyyy：支付方的账户ID。将从这些账户中销毁JT。
-	- zzzz：领取酬劳者的ID。
-	- aa.bb：销毁金额和酬劳。
-	- yyyy-mm-dd hh-mm-ss：发行时间。
+	- jtid：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- input：一个数组，包括每一个支付方的账户ID和支付金额。
+	- output：空数组，为了和transfer兼容。
+	- total：销毁总金额。
+	- time：发行销毁时间。
+	- remark：备注。
+3. 范例：
+<pre>
+	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	input:
+	- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
+	  amount: 1.05
+	output: []
+	total: 1.05
+	time: 2015-06-13 21:48:29
+	remark: sample
+</pre>
 
 ###交易Exchange
 1. 用途：用于交换，目前是不同JT之间的兑换，该数据会写入两种JT的账目存储。今后逐步扩展其它软件可以自动处理的数字资产交易。
