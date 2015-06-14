@@ -2,10 +2,13 @@
 package main
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
+	"golang.org/x/crypto/openpgp"
 	"gopkg.in/yaml.v2"
 	"log"
+	"os"
 	"time"
 )
 
@@ -13,34 +16,34 @@ var pubkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: OpenPGP.js v0.9.0
 Comment: http://openpgpjs.org
 
-xsBNBFSlVgcBCACQURxJMfdrPbAFa5ZGOs4j43tRmc7KQoM6lKveobO+v+Jg
-IIYqXtDadXAM1h34CQgwj4o7VFKf+M1SmGbO57cx+M3U1+SgKmW9w8gRwgNE
-q+m3JPo+HIiOI/X8Gsa9vrbAbs19UvXk4H+CdC02bxwruLPan87fI17wGLEB
-62mcLG9eNPg4XrmZDDISPvicR88AFmkZMPh9WoVm99jzKl3EWCfPXqdNiLWK
-kzXZO2jPLXLb2iJRacq2i+QXt5UWB5BEaAHLLVLTu5PNykHumN0xxIoidrxV
-G+ug8Z269ZmcYdRv2fgY/TYP+/h43RkSI+iqiXeKSL8+WGDqSpee9sPnABEB
-AAHNMOa1i+ivlei0puWPtyAoaHlnL2pzLnNhbXBsZSkgPHRlc3RAanNzYW1w
-bGUub3JnPsLAcgQQAQgAJgUCVKVWDwYLCQgHAwIJEE5QeumSjbLwBBUIAgoD
-FgIBAhsDAh4BAADijgf/e24fcRYoEZlIrej5ZblOszkKV7Y2900NerwrLPFK
-kfQVHOBSAi9Nls5rOlZ4jDi7rd8/V+NUDDqE966jMha6TpCnHd+j6I4tiJiq
-I8n51FoctVcpJcadygcoZE18pGF+dl62o7iLJVqsQv6ZnbLTQJngPDjAQGG8
-KKhJjpY2RYNnR8vBCb4+lH8lhBnXviUUyyFRBjbBdhiPVebvv/LGd60diEmJ
-+xKC89+Z0bGdElPpVW2WdOkTXL47UoNfZpHzpxhytOmjAykxGFtaqtUmHzvN
-KogM5YDXuO7ZcWjiiTbKSnLcYyWLBp8VGq+MdDQmIEV7YpE3/mWPHat0wZar
-X87ATQRUpVYMAQgAogdxHIK2i4MMeV2DASacwP037GCqyLHRcmo1ud5IYkHd
-WXs1xigEklj2+3AaWjYgHzhN/f5BE2aDFttSonJhQ+ltZrEArungIWppSfN+
-v6SyzmUsYK8EooF1M/EckvyF3ugub+SGst4MXyGfYhx901oRvKhY61pFWgZP
-3gs/P1nHbDpUYNDKENflVBV0ha2DSlLxFQdfSh4hh4Jm1icmw85V5gTwppQd
-CQ//qGZ757Tq4AtZS9givMYnSkXFsSlufKZ8LTVa/RFZ+gGKbcJHMR8XLoOc
-8n8Vge92GHm63W5mP33A99e+NgyegInLmoi3lIXGO8yORIdwci17Eaqa9QAR
-AQABwsBfBBgBCAATBQJUpVYQCRBOUHrpko2y8AIbDAAAmiAIAIHhfGiJ9e9L
-n8z9tD/BFzqk5vll36hCXkLdg2HzftJsxPdW0eT27iDLagJcsrbVpRAag49/
-47GH9BeHdtqsDNsh7UzQAlfp4t7+Fi00+9GuazHtTnI1bN9zgpGLCCNP6JUR
-J9Z00c+GhQayTkPwTCf9zCidtbbNJc7GRlfgOMaoNqGoasyZrltqoB6hCM16
-l0jkh59MIqQ+4FbLQOqr/7SGi6H1wzFa/Q4Q9R2VDg5zlEg163pbsf+ope52
-3rPxBia7vxpFfXQXGbtR6vZDjI8uqsEMEyflqiuHJxmjtitnYLRqxQRr9fZq
-WMc+ZlpNrplXO9WkeuhEICGQdZSy/ok=
-=+yKz
+xsBNBFSnY2kBCAC0335GMdWZmlseWpNlIwi7yc43dtT0V0yigb3pbd1vdVxY
+W/vdh0dzDADx/IyVgO699hp/Cno9Tuu/Hc3ohidHvUjkYMDOK0PLv+tCD7Qu
+RuPkb6FaJSiUEPzW/BgYuhiJD7AWX8nQpXZAvOKs78Ky/6dL1GlZ2pn0OJMo
+RA9XWUZrebHrxzKILwJTAjaAlvdlMcsu95cem5ZNHU9mK2oANTiPONSeojNh
+kRpGxVMGaWiFn/lFnk8y1CkVrmGp43xbIoIT2bl/o5bVkv1QSjcX0TeefBZv
+cz+FrluJG/MzJzjGtucAPgCijOK0yPv46vXqN6h/oIui0iNcXDru9jc9ABEB
+AAHNMem7hOWLh+WImiAoaHVhbmd5Z0BJVFcgb25seSkgPGh1YW5neWdAeHVl
+bWVuLmNvbT7CwHIEEAEIACYFAlSnY2sGCwkIBwMCCRBOkeAa0J/cugQVCAIK
+AxYCAQIbAwIeAQAAPQEH/2hTG+EYBWbSoHMwqfYl/NhNbfj8IVgMahsp577x
+Na5TvDqQGVeuYeLg+iTjXbyh/iOf2JP0Fv/EgwpLuIC5foJM8+fVAsLEJ/jo
+X75o4WQacTcwFFwdgDd1gFBF0alfbz8XORqsvM3nojounnRvYDoJwuwSiQOe
+r+4I7ehotHAjwKratzdE10IuQIlGEMne3U3yu38okzPcUswQ2QKm5LIk/fm8
+1SvN8FlOd89BhfJGY801WibfnbiOxayFkR1c6XaxgRbZhBvLGsU7v7Y4Ni/S
+cxYYhE7dWJkDalIABJ75Wtpl4qUj0OxIgvs3mqvpDeCcr2BCS+UnFu1/vOpY
+NWfOwE0EVKdjaQEIAPVuxvdrJi4NReMfr4jD4fk2fe8yW5AP+JqZlQesPW7D
+zmVxpLokn3XstaeVH6UnF17u9+ktsVBVQ8vefLzZGmv2k8f6S28W+eAFuok9
+fILaFdWuj2900SI9KuXTEKCgQ5qrEPlDTuWwn2G7eAHYOQOBm02p4SVQHquc
+OZGoMkeIXv+k7nypS06U343z6zHlah64RlgjOQab8xEHyAi3b3DEo9j6vUwC
+lWHdkjRCw8Cywwgzyez+fQuubw2JEolMjW/rV8MncMOuFJcFZddGooc0qtIH
+mK852JWoNYpgKlqiZJdDjMvjGSjNEoI/ozAs+4YJdvaMzYLwEsHbOKOXexkA
+EQEAAcLAXwQYAQgAEwUCVKdjbAkQTpHgGtCf3LoCGwwAAL5sB/sER+mFuUe9
+fQSwSWe3MG7UizNzXhCKwn+rpOwzZOk1cbYFLCaSjok5syQya/QI7EoW0qwG
+i1hie8XJEN4LFGpHBg4q2vyhN1Biye//peK2c4oYuWkocQL4vztrjnwcFFRq
+ptOcS9swHRIb9UV+asy0w59JJcsIzPry/pyZ15SYpl3GFTiMKUx1k2wOTISI
+Kk/LBkPnIy4rD5D3nw0mtHObQa8e9UhFkdnl5YK2hvQBI36FMu9Uc5TlComJ
+h5QFXfe/zb9hpyvijz6hHjMkT8Ib9t9wvCN8HX1kTsWpyZoZmKSHlTJq1QhD
+CFCd8czWD6gsLigm4J0v6+W+ghlM4yxB
+=ZSZT
 -----END PGP PUBLIC KEY BLOCK-----`
 
 type NormalAccount struct {
@@ -53,7 +56,7 @@ type NormalAccount struct {
 
 const (
 	rsa = 1 + iota
-	openpgp
+	pgp
 )
 
 type AutoAccount struct {
@@ -98,41 +101,64 @@ type Transfer struct {
 	Remark string
 }
 
-func main() {
-	MakeDestroy()
+type Offer struct {
+	JTID string
 }
 
-func MakeNormalAccount() {
+type Match struct {
+}
+
+type Item struct {
+	Type int
+	Data string
+	Sig  []string
+}
+
+const (
+	issue = 1 + iota
+	destroy
+	transfer
+	offer
+	match
+	alloc
+)
+
+func main() {
+	log.Printf("--- Item:\n%s\n\n", MakeItem())
+}
+
+func MakeNormalAccount() string {
 	hash := sha256.New()
 	hash.Write([]byte(pubkey))
 	md := hash.Sum(nil)
 	mdStr := hex.EncodeToString(md)
 
-	na := NormalAccount{mdStr, openpgp, pubkey, time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
+	na := NormalAccount{mdStr, pgp, pubkey, time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
 
 	d, _ := yaml.Marshal(&na)
-	log.Printf("--- NormalAccount:\n%s\n\n", string(d))
+
+	return string(d)
 }
 
-func MakeAutoAccount() {
+func MakeAutoAccount() string {
 	mdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
 
 	aa := AutoAccount{mdStr, js, "raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js", time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
 
 	d, _ := yaml.Marshal(&aa)
-	log.Printf("--- AutoAccount:\n%s\n\n", string(d))
+	return string(d)
 }
 
-func MakeRootAccount() {
+func MakeRootAccount() string {
 	mdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
 
 	ra := RootAccount{mdStr, js, "raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js", trust, pubkey, time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
 
 	d, _ := yaml.Marshal(&ra)
-	log.Printf("--- RootAccount:\n%s\n\n", string(d))
+	return string(d)
 }
 
-func MakeTransfer() {
+func MakeTransfer() string {
 	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
 	hash := sha256.New()
 	hash.Write([]byte(pubkey))
@@ -143,10 +169,10 @@ func MakeTransfer() {
 
 	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
 	d, _ := yaml.Marshal(&tf)
-	log.Printf("--- Transfer:\n%s\n\n", string(d))
+	return string(d)
 }
 
-func MakeIssue() {
+func MakeIssue() string {
 	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
 	//hash := sha256.New()
 	//hash.Write([]byte(pubkey))
@@ -157,10 +183,10 @@ func MakeIssue() {
 
 	tf := Transfer{JTmdStr, []Amount{}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
 	d, _ := yaml.Marshal(&tf)
-	log.Printf("--- Issue:\n%s\n\n", string(d))
+	return string(d)
 }
 
-func MakeDestroy() {
+func MakeDestroy() string {
 	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
 	hash := sha256.New()
 	hash.Write([]byte(pubkey))
@@ -171,5 +197,42 @@ func MakeDestroy() {
 
 	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
 	d, _ := yaml.Marshal(&tf)
-	log.Printf("--- Destroy:\n%s\n\n", string(d))
+	return string(d)
+}
+
+func MakeItem() string {
+	trstr := MakeTransfer()
+	signed := Sign(trstr)
+
+	item := Item{transfer, trstr, []string{signed}}
+	d, _ := yaml.Marshal(&item)
+	return string(d)
+}
+
+func Sign(plaintext string) string {
+	secringFile, _ := os.Open("path")
+	defer secringFile.Close()
+	secring, _ := openpgp.ReadArmoredKeyRing(secringFile)
+	myPrivateKey := getKeyByEmail(secring, "huangyg@xuemen.com")
+
+	myPrivateKey.PrivateKey.Decrypt([]byte("pass"))
+
+	ret := ""
+	buf := bytes.NewBufferString(ret)
+	openpgp.ArmoredDetachSignText(buf, myPrivateKey, bytes.NewBufferString(plaintext), nil)
+	ret = buf.String()
+
+	return ret
+}
+
+func getKeyByEmail(keyring openpgp.EntityList, email string) *openpgp.Entity {
+	for _, entity := range keyring {
+		for _, ident := range entity.Identities {
+			if ident.UserId.Email == email {
+				return entity
+			}
+		}
+	}
+
+	return nil
 }

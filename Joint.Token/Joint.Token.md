@@ -170,29 +170,46 @@ Joint Token
 			remark: Account Sample
 		</pre>
 
-###转账Transfer
-1. 用途：用于存放任何用途的转账，支付方支付总金额等于各接收方收款金额之和。
-2. 账目数据结构：
-	- jtid：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
-	- input：一个数组，包括每一个支付方的账户ID和支付金额。
-	- output：一个数组，包括每一个接收方的账户ID和接收金额。
-	- total：收支总金额。
-	- time：转账时间。
-	- remark：备注。
+###账目封装Item
+1. 用途：统一封装转账、发行、销毁、要约、撮合、分配等账目的数据。
+2. 数据结构：
+	* type: 账目种类
+		* 1:issue
+		* 2:destroy
+		* 3:transfer
+		* 4:offer
+		* 5:match
+		* 6:alloc
+	* data: 账目数据
+	* sig: 一个字符串数组，每个成员是一个数字签名。
 3. 范例：
 <pre>
-	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
-	input:
-	- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
-	  amount: 1.05
-	output:
-	- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
-	  amount: 1
-	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
-	  amount: 0.05
-	total: 1.05
-	time: 2015-06-13 21:38:59
-	remark: sample
+	type: 3
+	data: |
+	  jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	  input:
+	  - id: e98a7202968f6a76aabbf6bc06d40101190f1956d509ddf23f9a01eb028fc0f6
+	    amount: 1.05
+	  output:
+	  - id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+	    amount: 1
+	  - id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+	    amount: 0.05
+	  total: 1.05
+	  time: 2015-06-14 16:13:10
+	  remark: sample
+	sig:
+	- |-
+	  -----BEGIN PGP SIGNATURE-----
+	
+	  wsBcBAEBCAAQBQJVfTacCRBOkeAa0J/cugAA6YIIAAL7e9wVlxZl72ngdLWG/3Ek
+	  atUAGED95O8RPvYw0AqjiXVqTB2U2xUti5GI8bdMnGRx+Fum7K659hvSx9Y2DAbh
+	  +2Mt0TjTbTrMBC8ixf9cqX3YG0su0Msr7MKa9kSTvrF3XYVBmNSXpFIvZNU1y25R
+	  GkxXydpjMvyeiqUEGxXVSB6tnRm3Z5v4yu5H4JIYk93pclHUR9GWurIsYyIQO4U0
+	  0R+fca/Dc7tz9/YGk1JSvdoY2OjApv66VFBpnrkwoKwdiXQFEIvGFqvp44LKHRdL
+	  BA7TAtJgAz6WVRZRQZO8yRE5jPmdDa8C8bEa+uM4Tw9SS1z6RzGFxvu56uWAt1g=
+	  =RwtD
+	  -----END PGP SIGNATURE-----
 </pre>
 
 ###发行Issue
@@ -238,6 +255,41 @@ Joint Token
 	time: 2015-06-13 21:48:29
 	remark: sample
 </pre>
+
+###转账Transfer
+1. 用途：用于存放任何用途的转账，支付方支付总金额等于各接收方收款金额之和。
+2. 账目数据结构：
+	- jtid：JT种类的ID，通常是这种JT的发行和销毁算法源代码的数字摘要。
+	- input：一个数组，包括每一个支付方的账户ID和支付金额。
+	- output：一个数组，包括每一个接收方的账户ID和接收金额。
+	- total：收支总金额。
+	- time：转账时间。
+	- remark：备注。
+3. 范例：
+<pre>
+	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	input:
+	- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
+	  amount: 1.05
+	output:
+	- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+	  amount: 1
+	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+	  amount: 0.05
+	total: 1.05
+	time: 2015-06-13 21:38:59
+	remark: sample
+</pre>
+
+###要约Offer
+1. 用途：
+2. 账目数据结构：
+3. 数据说明：
+
+###撮合Match
+1. 用途：
+2. 账目数据结构：
+3. 数据说明：
 
 ###交易Exchange
 1. 用途：用于交换，目前是不同JT之间的兑换，该数据会写入两种JT的账目存储。今后逐步扩展其它软件可以自动处理的数字资产交易。
