@@ -4,6 +4,8 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/base64"
 	"encoding/hex"
 	"golang.org/x/crypto/openpgp"
 	"gopkg.in/yaml.v2"
@@ -109,9 +111,12 @@ type Match struct {
 }
 
 type Item struct {
-	Type int
-	Data string
-	Sig  []string
+	Type     int
+	Data     string
+	HashType int
+	Hash     string
+	SigType  int
+	Sig      []string
 }
 
 const (
@@ -121,6 +126,11 @@ const (
 	offer
 	match
 	alloc
+)
+
+const (
+	SecureHashAlgorithm512 = 1 + iota
+	SecureHashAlgorithm256
 )
 
 func main() {
@@ -204,18 +214,22 @@ func MakeItem() string {
 	trstr := MakeTransfer()
 	signed := Sign(trstr)
 
-	item := Item{transfer, trstr, []string{signed}}
+	sum := sha512.Sum512([]byte(trstr))
+	buf := sum[:]
+	hash := base64.StdEncoding.EncodeToString(buf)
+
+	item := Item{transfer, trstr, SecureHashAlgorithm512, hash, pgp, []string{signed}}
 	d, _ := yaml.Marshal(&item)
 	return string(d)
 }
 
 func Sign(plaintext string) string {
-	secringFile, _ := os.Open("path")
+	secringFile, _ := os.Open("C:/Users/huangyg/Desktop/huangyg.sec")
 	defer secringFile.Close()
 	secring, _ := openpgp.ReadArmoredKeyRing(secringFile)
 	myPrivateKey := getKeyByEmail(secring, "huangyg@xuemen.com")
 
-	myPrivateKey.PrivateKey.Decrypt([]byte("pass"))
+	myPrivateKey.PrivateKey.Decrypt([]byte("passphrase"))
 
 	ret := ""
 	buf := bytes.NewBufferString(ret)

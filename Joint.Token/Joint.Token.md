@@ -181,6 +181,13 @@ Joint Token
 		* 5:match
 		* 6:alloc
 	* data: 账目数据
+	* hashtype:哈希算法类型
+		* 1:SecureHashAlgorithm512
+		* 2:SecureHashAlgorithm256
+	* hash：哈希值
+	* sigtype:签名类型
+		- 1:rsa
+		- 2:openpgp
 	* sig: 一个字符串数组，每个成员是一个数字签名。
 3. 范例：
 <pre>
@@ -196,19 +203,22 @@ Joint Token
 	  - id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
 	    amount: 0.05
 	  total: 1.05
-	  time: 2015-06-14 16:13:10
+	  time: 2015-06-14 17:54:16
 	  remark: sample
+	hashtype: 1
+	hash: aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ==
+	sigtype: 2
 	sig:
 	- |-
 	  -----BEGIN PGP SIGNATURE-----
 	
-	  wsBcBAEBCAAQBQJVfTacCRBOkeAa0J/cugAA6YIIAAL7e9wVlxZl72ngdLWG/3Ek
-	  atUAGED95O8RPvYw0AqjiXVqTB2U2xUti5GI8bdMnGRx+Fum7K659hvSx9Y2DAbh
-	  +2Mt0TjTbTrMBC8ixf9cqX3YG0su0Msr7MKa9kSTvrF3XYVBmNSXpFIvZNU1y25R
-	  GkxXydpjMvyeiqUEGxXVSB6tnRm3Z5v4yu5H4JIYk93pclHUR9GWurIsYyIQO4U0
-	  0R+fca/Dc7tz9/YGk1JSvdoY2OjApv66VFBpnrkwoKwdiXQFEIvGFqvp44LKHRdL
-	  BA7TAtJgAz6WVRZRQZO8yRE5jPmdDa8C8bEa+uM4Tw9SS1z6RzGFxvu56uWAt1g=
-	  =RwtD
+	  wsBcBAEBCAAQBQJVfU9ICRBOkeAa0J/cugAAKpEIACPBA6vbXLtKial7bLeuWJe7
+	  ny7FCYCAKtdu7UYTtjBJ4zw9b/+BrcaxYbXzQ6d+/JuafqI1qyitTEwC6eDYzWWT
+	  FPZAhDloWZpiEBAZJCZ7O1bc54ixcHbyuFYFqwpnozh2UjAw3jz/wT8ETK9Er+Tg
+	  f0V8tuy2frbOiBPcZZOzU4cAoyb2o/BGwTKmTBWwz55kR74AsUfg8GKcC+AbzLjE
+	  hK/bFY51wtOMU2DyCK6Lv30R2f8N76TUIL6NUGjUd2nxqkBCh2wAk/hIvl3mREBI
+	  mVqyTgLyczTGb57JDkmtH/Ml+4o9FGRpNKYHVtmBZBwtuu/a01iGRKuCjh92Qso=
+	  =teu6
 	  -----END PGP SIGNATURE-----
 </pre>
 
