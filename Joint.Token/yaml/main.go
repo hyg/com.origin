@@ -3,10 +3,8 @@ package main
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/base64"
-	"encoding/hex"
 	"golang.org/x/crypto/openpgp"
 	"gopkg.in/yaml.v2"
 	"log"
@@ -104,8 +102,23 @@ type Transfer struct {
 }
 
 type Offer struct {
-	JTID string
+	JTID      string
+	Type      int
+	OfferorID string
+	AgentID   string
+	ObjID     string
+	ObjUnit   string
+	Price     float64 // how many JT pre Unit Obj?
+	JTAmount  float64
+	ObjAMount float64
+	Time      string
+	Remark    string
 }
+
+const (
+	buy = 1 + iota
+	sale
+)
 
 type Match struct {
 }
@@ -134,14 +147,13 @@ const (
 )
 
 func main() {
-	log.Printf("--- Item:\n%s\n\n", MakeItem())
+	log.Printf("--- match:\n%s\n\n", MakeTransfer())
 }
 
 func MakeNormalAccount() string {
-	hash := sha256.New()
-	hash.Write([]byte(pubkey))
-	md := hash.Sum(nil)
-	mdStr := hex.EncodeToString(md)
+	sum := sha512.Sum512([]byte(pubkey))
+	buf := sum[:]
+	mdStr := base64.StdEncoding.EncodeToString(buf)
 
 	na := NormalAccount{mdStr, pgp, pubkey, time.Now().Format("2006-01-02 15:04:05"), "Account Sample"}
 
@@ -170,15 +182,21 @@ func MakeRootAccount() string {
 
 func MakeTransfer() string {
 	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
-	hash := sha256.New()
-	hash.Write([]byte(pubkey))
-	md := hash.Sum(nil)
-	NmdStr := hex.EncodeToString(md)
+
+	sum := sha512.Sum512([]byte(pubkey))
+	buf := sum[:]
+	NmdStr := base64.StdEncoding.EncodeToString(buf)
+
 	Amdstr1 := "53fd8ea011483ce70a16332d877d6efd5bafb369"
 	Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
+	Adminstr := "62babbb806a29f988a4bf0036350665abcab7be0"
 
-	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
-	d, _ := yaml.Marshal(&tf)
+	tf1 := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
+	tf2 := Transfer{JTmdStr, []Amount{Amount{Amdstr1, 1.05}}, []Amount{Amount{Amdstr2, 1.0}, Amount{Adminstr, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ=="}
+	log.Print(tf1)
+	log.Print(tf2)
+
+	d, _ := yaml.Marshal(&tf2)
 	return string(d)
 }
 
@@ -198,10 +216,11 @@ func MakeIssue() string {
 
 func MakeDestroy() string {
 	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
-	hash := sha256.New()
-	hash.Write([]byte(pubkey))
-	md := hash.Sum(nil)
-	NmdStr := hex.EncodeToString(md)
+
+	sum := sha512.Sum512([]byte(pubkey))
+	buf := sum[:]
+	NmdStr := base64.StdEncoding.EncodeToString(buf)
+
 	//Amdstr1 := "53fd8ea011483ce70a16332d877d6efd5bafb369"
 	//Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
 
@@ -249,4 +268,18 @@ func getKeyByEmail(keyring openpgp.EntityList, email string) *openpgp.Entity {
 	}
 
 	return nil
+}
+
+func MakeOffer() string {
+	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
+
+	sum := sha512.Sum512([]byte(pubkey))
+	buf := sum[:]
+	OfferorStr := base64.StdEncoding.EncodeToString(buf)
+
+	Agentstr := "53fd8ea011483ce70a16332d877d6efd5bafb369"
+
+	of := Offer{JTmdStr, buy, OfferorStr, Agentstr, "RMB", "yuan", 1.05, 105, 100, time.Now().Format("2006-01-02 15:04:05"), "offer sample"}
+	d, _ := yaml.Marshal(&of)
+	return string(d)
 }

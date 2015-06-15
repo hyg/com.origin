@@ -7,7 +7,7 @@ Joint Token
 	* 只使用联合提货权报价
 	* 只接受联合提货权购买产品和服务
 	* 只发放联合提货权作为报酬
-3. **兑换处**提供联合提货权与其它记账单位的兑换，由部署者统一管理。各方遵守统一的兑换规则。
+3. **兑换处**是一种自动账户，它提供联合提货权与其它记账单位的兑换，由部署者统一开发。自动账户接受要约，定期公布余额，撮合成功后完成支付。兑换处管理员提供推广和咨询服务，撮合的要约差价作作为其报酬。
 
 ###作用
 1. 隔离内外价值体系，使各项资源的内部估价独立于外部环境，可以跟随自身发展节奏而调整。
@@ -42,7 +42,8 @@ Joint Token
 		2. 信托模式：由联合提货权部署者作为委托方，制定管理规则、规定管理费用、选择受托方。由受托方按规则制定卖出价、买入价。其它操作均由软件自动完成。部署者的权利通过密钥和签名实现。
 2. 预售/预购/提货/兑现：普通使用者可以提出预售，任何使用者可以预购、提货、兑现。具体规则由部署者制定并实现。
 3. 贷款/还款：普通使用者可以申请贷款，孵化基金和其他使用者均可放贷。由软件自动按期还款。
-4. 导师：普通使用者可以购买辅导服务，辅导者即成为**导师**。导师除了可以按辅导协议收费外，在每次预售开始前提交的预购，拥有优先权。
+4. 要约/撮合：，JT持有者可以向兑换处提交要约，要约撮合成功后自动支付（transfer的remark中带有要约的hash值），差价作为兑换处管理员的报酬。
+5. 导师：普通使用者可以购买辅导服务，辅导者即成为**导师**。导师除了可以按辅导协议收费外，在每次预售开始前提交的预购，拥有优先权。
 
 ###账户
 1. 普通账户：以公钥（或其经过一组计算后的结果）作为账户ID。该密钥对用于账户相关数字签名。
@@ -275,31 +276,67 @@ Joint Token
 	- total：收支总金额。
 	- time：转账时间。
 	- remark：备注。
-3. 范例：
-<pre>
-	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
-	input:
-	- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
-	  amount: 1.05
-	output:
-	- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
-	  amount: 1
-	- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
-	  amount: 0.05
-	total: 1.05
-	time: 2015-06-13 21:38:59
-	remark: sample
-</pre>
+3. 范例一（普通转账）：
+	<pre>
+		jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+		input:
+		- id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
+		  amount: 1.05
+		output:
+		- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+		  amount: 1
+		- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+		  amount: 0.05
+		total: 1.05
+		time: 2015-06-13 21:38:59
+		remark: sample
+	</pre>
+4. 范例二（要约撮合）
+	<pre>
+		jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+		input:
+		- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
+		  amount: 1.05
+		output:
+		- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
+		  amount: 1
+		- id: 62babbb806a29f988a4bf0036350665abcab7be0
+		  amount: 0.05
+		total: 1.05
+		time: 2015-06-15 20:17:23
+		remark: offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ==
+	</pre>
 
 ###要约Offer
 1. 用途：
 2. 账目数据结构：
-3. 数据说明：
-
-###撮合Match
-1. 用途：
-2. 账目数据结构：
-3. 数据说明：
+	* jtid: 本位币ID
+	* type：买卖种类
+		* 1:买
+		* 2:卖
+	* offierorid：要约提出账户ID
+	* agentid：交易所账户ID
+	* objid：买卖对象ID，外部对象直接用名称，内部记账单位用根账户ID。
+	* objunit：买卖对象的单位。
+	* price：价格，每个单位的对象价值多少个本位币。
+	* jtamount：要约的本位币总额。
+	* objamount：要约的买卖对象总单位。
+	- time：要约时间。
+	- remark：备注。
+3. 范例：
+<pre>
+	jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
+	type: 1
+	offerorid: e98a7202968f6a76aabbf6bc06d40101190f1956d509ddf23f9a01eb028fc0f6
+	agentid: 53fd8ea011483ce70a16332d877d6efd5bafb369
+	objid: RMB
+	objunit: yuan
+	price: 1.05
+	jtamount: 105
+	objamount: 100
+	time: 2015-06-15 19:52:48
+	remark: offer sample
+</pre>
 
 ###交易Exchange
 1. 用途：用于交换，目前是不同JT之间的兑换，该数据会写入两种JT的账目存储。今后逐步扩展其它软件可以自动处理的数字资产交易。
