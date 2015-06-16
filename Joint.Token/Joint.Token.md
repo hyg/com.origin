@@ -183,8 +183,8 @@ Joint Token
 		* 6:alloc
 	* data: 账目数据
 	* hashtype:哈希算法类型
-		* 1:SecureHashAlgorithm512
-		* 2:SecureHashAlgorithm256
+		* 1:SHA512
+		* 2:SHA256
 	* hash：哈希值
 	* sigtype:签名类型
 		- 1:rsa
@@ -296,15 +296,16 @@ Joint Token
 		jtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
 		input:
 		- id: 53fd8ea011483ce70a16332d877d6efd5bafb369
-		  amount: 1.05
+		  a: 1.05
+		  m: offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ==
 		output:
 		- id: 6f9b6a31cc59036998ee0ab8c11547397dda1944
-		  amount: 1
+		  a: 1
 		- id: 62babbb806a29f988a4bf0036350665abcab7be0
-		  amount: 0.05
+		  a: 0.05
 		total: 1.05
-		time: 2015-06-15 20:17:23
-		remark: offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ==
+		time: 2015-06-16 11:07:42
+		remark: match sample
 	</pre>
 
 ###要约Offer

@@ -88,17 +88,18 @@ const (
 )
 
 type Amount struct {
-	ID     string
-	Amount float64
+	ID      string
+	Value   float64 "v,omitempty"
+	Message string  "m,omitempty"
 }
 
 type Transfer struct {
 	JTID   string
-	Input  []Amount
-	Output []Amount
-	Total  float64
-	Time   string
-	Remark string
+	Input  []Amount "i,omitempty"
+	Output []Amount "o,omitempty"
+	Sum    float64  "s"
+	Time   string   "t"
+	Remark string   "r,omitempty"
 }
 
 type Offer struct {
@@ -120,7 +121,8 @@ const (
 	sale
 )
 
-type Match struct {
+type Alloc struct {
+	JTID string
 }
 
 type Item struct {
@@ -142,8 +144,8 @@ const (
 )
 
 const (
-	SecureHashAlgorithm512 = 1 + iota
-	SecureHashAlgorithm256
+	SHA512 = 1 + iota
+	SHA256
 )
 
 func main() {
@@ -191,12 +193,12 @@ func MakeTransfer() string {
 	Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
 	Adminstr := "62babbb806a29f988a4bf0036350665abcab7be0"
 
-	tf1 := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
-	tf2 := Transfer{JTmdStr, []Amount{Amount{Amdstr1, 1.05}}, []Amount{Amount{Amdstr2, 1.0}, Amount{Adminstr, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ=="}
+	tf1 := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05, ""}}, []Amount{Amount{Amdstr1, 1.0, ""}, Amount{Amdstr2, 0.05, ""}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
+	tf2 := Transfer{JTmdStr, []Amount{Amount{Amdstr1, 1.05, "offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ=="}}, []Amount{Amount{Amdstr2, 1.0, ""}, Amount{Adminstr, 0.05, ""}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "match sample"}
 	log.Print(tf1)
 	log.Print(tf2)
 
-	d, _ := yaml.Marshal(&tf2)
+	d, _ := yaml.Marshal(&tf1)
 	return string(d)
 }
 
@@ -209,7 +211,7 @@ func MakeIssue() string {
 	Amdstr1 := "53fd8ea011483ce70a16332d877d6efd5bafb369"
 	Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
 
-	tf := Transfer{JTmdStr, []Amount{}, []Amount{Amount{Amdstr1, 1.0}, Amount{Amdstr2, 0.05}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
+	tf := Transfer{JTmdStr, []Amount{}, []Amount{Amount{Amdstr1, 1.0, ""}, Amount{Amdstr2, 0.05, ""}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
 	d, _ := yaml.Marshal(&tf)
 	return string(d)
 }
@@ -224,7 +226,7 @@ func MakeDestroy() string {
 	//Amdstr1 := "53fd8ea011483ce70a16332d877d6efd5bafb369"
 	//Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
 
-	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05}}, []Amount{}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
+	tf := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05, ""}}, []Amount{}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
 	d, _ := yaml.Marshal(&tf)
 	return string(d)
 }
@@ -237,7 +239,7 @@ func MakeItem() string {
 	buf := sum[:]
 	hash := base64.StdEncoding.EncodeToString(buf)
 
-	item := Item{transfer, trstr, SecureHashAlgorithm512, hash, pgp, []string{signed}}
+	item := Item{transfer, trstr, SHA512, hash, pgp, []string{signed}}
 	d, _ := yaml.Marshal(&item)
 	return string(d)
 }
