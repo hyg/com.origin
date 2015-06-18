@@ -103,17 +103,11 @@ type Transfer struct {
 }
 
 type Offer struct {
-	JTID      string
 	Type      int
-	OfferorID string
-	AgentID   string
 	ObjID     string
 	ObjUnit   string
 	Price     float64 // how many JT pre Unit Obj?
-	JTAmount  float64
 	ObjAMount float64
-	Time      string
-	Remark    string
 }
 
 const (
@@ -193,12 +187,14 @@ func MakeTransfer() string {
 	Amdstr2 := "6f9b6a31cc59036998ee0ab8c11547397dda1944"
 	Adminstr := "62babbb806a29f988a4bf0036350665abcab7be0"
 
+	offerstr := MakeOffer()
+
 	tf1 := Transfer{JTmdStr, []Amount{Amount{NmdStr, 1.05, ""}}, []Amount{Amount{Amdstr1, 1.0, ""}, Amount{Amdstr2, 0.05, ""}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "sample"}
-	tf2 := Transfer{JTmdStr, []Amount{Amount{Amdstr1, 1.05, "offerhash:aWWEhRTbrHFVMMXb3aalvXi4QPhxEtuSrgEX+wskyTq3+Rp1mPVebgEf9u98+hW456PaZI/Bslb3Cxq55Aq2TQ=="}}, []Amount{Amount{Amdstr2, 1.0, ""}, Amount{Adminstr, 0.05, ""}}, 1.05, time.Now().Format("2006-01-02 15:04:05"), "match sample"}
+	tf2 := Transfer{JTmdStr, []Amount{Amount{Amdstr1, 105, offerstr}}, []Amount{Amount{Amdstr2, 100, ""}, Amount{Adminstr, 5, ""}}, 105, time.Now().Format("2006-01-02 15:04:05"), "match sample"}
 	log.Print(tf1)
 	log.Print(tf2)
 
-	d, _ := yaml.Marshal(&tf1)
+	d, _ := yaml.Marshal(&tf2)
 	return string(d)
 }
 
@@ -273,15 +269,7 @@ func getKeyByEmail(keyring openpgp.EntityList, email string) *openpgp.Entity {
 }
 
 func MakeOffer() string {
-	JTmdStr := "1c636fec7bdfdcd6bb0a3fe049e160d354fe9806"
-
-	sum := sha512.Sum512([]byte(pubkey))
-	buf := sum[:]
-	OfferorStr := base64.StdEncoding.EncodeToString(buf)
-
-	Agentstr := "53fd8ea011483ce70a16332d877d6efd5bafb369"
-
-	of := Offer{JTmdStr, buy, OfferorStr, Agentstr, "RMB", "yuan", 1.05, 105, 100, time.Now().Format("2006-01-02 15:04:05"), "offer sample"}
+	of := Offer{buy, "RMB", "yuan", 1.05, 100}
 	d, _ := yaml.Marshal(&of)
 	return string(d)
 }
