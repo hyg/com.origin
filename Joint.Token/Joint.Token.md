@@ -46,7 +46,7 @@ Joint Token
 5. 导师：普通使用者可以购买辅导服务，辅导者即成为**导师**。导师除了可以按辅导协议收费外，在每次预售开始前提交的预购，拥有优先权。
 
 ###账户
-1. 普通账户：以公钥（或其经过一组计算后的结果）作为账户ID。该密钥对用于账户相关数字签名。
+1. 普通账户：以公钥（或其经过一组计算后的结果，opepgp类型取数字指纹）作为账户ID。该密钥对用于账户相关数字签名。
 	1. 账户定义数据结构：
 		- id: 账户ID。
 		- keytype: 密钥类型。
@@ -57,44 +57,11 @@ Joint Token
 		- remark: 备注文本。
 	2. yaml范例：
 		<pre>
-		id: 7798bf69af167ae776585cde93ba497f86fa9602c3d94d58420089ab60111f9e
-		keytype: 2
-		pubkey: |-
-		  -----BEGIN PGP PUBLIC KEY BLOCK-----
-		  Version: OpenPGP.js v0.9.0
-		  Comment: http://openpgpjs.org
-		
-		  xsBNBFSlVgcBCACQURxJMfdrPbAFa5ZGOs4j43tRmc7KQoM6lKveobO+v+Jg
-		  IIYqXtDadXAM1h34CQgwj4o7VFKf+M1SmGbO57cx+M3U1+SgKmW9w8gRwgNE
-		  q+m3JPo+HIiOI/X8Gsa9vrbAbs19UvXk4H+CdC02bxwruLPan87fI17wGLEB
-		  62mcLG9eNPg4XrmZDDISPvicR88AFmkZMPh9WoVm99jzKl3EWCfPXqdNiLWK
-		  kzXZO2jPLXLb2iJRacq2i+QXt5UWB5BEaAHLLVLTu5PNykHumN0xxIoidrxV
-		  G+ug8Z269ZmcYdRv2fgY/TYP+/h43RkSI+iqiXeKSL8+WGDqSpee9sPnABEB
-		  AAHNMOa1i+ivlei0puWPtyAoaHlnL2pzLnNhbXBsZSkgPHRlc3RAanNzYW1w
-		  bGUub3JnPsLAcgQQAQgAJgUCVKVWDwYLCQgHAwIJEE5QeumSjbLwBBUIAgoD
-		  FgIBAhsDAh4BAADijgf/e24fcRYoEZlIrej5ZblOszkKV7Y2900NerwrLPFK
-		  kfQVHOBSAi9Nls5rOlZ4jDi7rd8/V+NUDDqE966jMha6TpCnHd+j6I4tiJiq
-		  I8n51FoctVcpJcadygcoZE18pGF+dl62o7iLJVqsQv6ZnbLTQJngPDjAQGG8
-		  KKhJjpY2RYNnR8vBCb4+lH8lhBnXviUUyyFRBjbBdhiPVebvv/LGd60diEmJ
-		  +xKC89+Z0bGdElPpVW2WdOkTXL47UoNfZpHzpxhytOmjAykxGFtaqtUmHzvN
-		  KogM5YDXuO7ZcWjiiTbKSnLcYyWLBp8VGq+MdDQmIEV7YpE3/mWPHat0wZar
-		  X87ATQRUpVYMAQgAogdxHIK2i4MMeV2DASacwP037GCqyLHRcmo1ud5IYkHd
-		  WXs1xigEklj2+3AaWjYgHzhN/f5BE2aDFttSonJhQ+ltZrEArungIWppSfN+
-		  v6SyzmUsYK8EooF1M/EckvyF3ugub+SGst4MXyGfYhx901oRvKhY61pFWgZP
-		  3gs/P1nHbDpUYNDKENflVBV0ha2DSlLxFQdfSh4hh4Jm1icmw85V5gTwppQd
-		  CQ//qGZ757Tq4AtZS9givMYnSkXFsSlufKZ8LTVa/RFZ+gGKbcJHMR8XLoOc
-		  8n8Vge92GHm63W5mP33A99e+NgyegInLmoi3lIXGO8yORIdwci17Eaqa9QAR
-		  AQABwsBfBBgBCAATBQJUpVYQCRBOUHrpko2y8AIbDAAAmiAIAIHhfGiJ9e9L
-		  n8z9tD/BFzqk5vll36hCXkLdg2HzftJsxPdW0eT27iDLagJcsrbVpRAag49/
-		  47GH9BeHdtqsDNsh7UzQAlfp4t7+Fi00+9GuazHtTnI1bN9zgpGLCCNP6JUR
-		  J9Z00c+GhQayTkPwTCf9zCidtbbNJc7GRlfgOMaoNqGoasyZrltqoB6hCM16
-		  l0jkh59MIqQ+4FbLQOqr/7SGi6H1wzFa/Q4Q9R2VDg5zlEg163pbsf+ope52
-		  3rPxBia7vxpFfXQXGbtR6vZDjI8uqsEMEyflqiuHJxmjtitnYLRqxQRr9fZq
-		  WMc+ZlpNrplXO9WkeuhEICGQdZSy/ok=
-		  =+yKz
-		  -----END PGP PUBLIC KEY BLOCK-----
-		createtime: 2015-05-30 15:16:37
-		remark: Account Sample
+			id: 834259147e2b3f45d242767cf6070ae4c7ec14a5
+			keytype: 2
+			pubkey: "-----BEGIN PGP PUBLIC KEY BLOCK-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nxsBNBFWDX8oBB/9JNcxBZ0mUv0I19tPou8mNLTh6lAUUZBTMkoy9rJbQJDif\nGHjdUMpKaIEkju57kXp/D1XbmAmyy3E7tA+UPwCICWUkbpn5o9RyAe8elsmC\ni+ZuS03ObXCGWwMENQBuWV2UrXeoUJOVqRjywkipX49prV81E3m2Rg6irMXl\nFkq9a8UcfYo3r75S5qmWLJk4FjQepQTPgdv6jopoM/Tt7/HGzQ476V148q/U\nMLxcx3qZV9AZ7l/aJn1GBSd+zCw598Zlkum7GREua6QfC66knFTrm2bF4ph/\narP1XAQ9FaFQG4pJJTtK8PHS+8q1DcCw696iuCf82cPlKhFA7hS9r3KlABEB\nAAHNDzEyMyAoMTIzKSA8MTIzPsLAcgQQAQgAJgUCVYNf0wYLCQgHAwIJEPYH\nCuTH7BSlBBUIAgoDFgIBAhsDAh4BAABNVgf9HbbipF1//ynSYNK7dsUV3NPb\nuMD6VAtTGpwWMvczui92enpTEKFKZ6wIBsUafo4+HD2l1TXHmaWRPNO4JAh0\nHj+Jyyw+QYg1nR/vvBm4GantdahhuTCvL+1S3UXBSxLgAC/RGGGM+o0mndCh\naZSeW0x0tJUrakKEE5cH0Gmq1h/gtiTmZLv9jux8b1SBl2J3XUmHLEECEB+y\nb14V7tJSVUFjT24sD7Q97R6VSCpQMEw2zsuyajv7C1dO30jeVlvNqhHTGl3D\nLvL9L2lQJ3bsin+p9rpXQhueZqzL/Y+ls+tD7HZoXEIxjSFfzER36lHRb1WP\nETn1keUzOzpUwolGac7ATQRVg1/PAQgA5hq5BKEjzQ3QI6xBGHW5fvsrw5/h\neSvGc2LehvU1rqlQwvv3Do7dVBOiV/lXAmdrxiMj8xRjJ96OFWXgsctzU9sc\nMV015k0xP031UTGRoJAN+Wbgmy1F1nxnib1LPhtRY0e+laX3WYS60mmRoBIR\nOQKXM2AMXeYi2pflPvkgvUX3bY5B9E5N43W/Vfz/T7XG0prSyzXJiU4yGoFP\nOCNkrOhRY79nBoIpCHtDGDStKRT++I63oJyYvneFHa2T2ByyXDOwSut/Kit/\nT9m8+6HCN23rV99/5oYB+X1HMfsvn2KqcHfHluqpQubBeInpztWWVKxpyJmz\nfKdacOxBEOmi0wARAQABwsBfBBgBCAATBQJVg1/UCRD2Bwrkx+wUpQIbDAAA\npjEH/0gJF5mm47uLMjjvg4G72RWfZ/vcutG6fsbRfoUd8Rxa4GNgYFnOEZY/\nDcm/6rPw5hkIYrEC6x+IyjKXqzcSpcy9Ur24wsa6SRLWOAZ+ACimorHUq+Xt\n2qqm+2zlmEj6dNS7RklCCxXntR3n1bjSM6dUOYW8yE4Z3055OXzCiT9ycs4A\nuDv/ZgheVOvoRnD6TkcDJOI3Lqb4So3BE9IHaNxV+zsu6+L9u8JF4Lnnv+EJ\nUwW4SFddjr+Yh3MP54+ZVYsNOikNZJ2VWo0Jx9A+tkS0+tdlA/rDVeynis5G\nsduaelylIy596jpFeUgQs2RW9dEVS+nGvOlnVOMMUH26vQE=\r\n=cfA0\r\n-----END PGP PUBLIC KEY BLOCK-----\r\n\r\n"
+			createtime: 1434673098000
+			remark: Auto Account Sample
 		</pre>
 2. 自动账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID。这组源代码定义了所有支出操作，对每种操作定义了激发条件和内部唯一的操作ID。自动账户由利益共同体使用，每次规则升级将产生不同的自动账户。
 	1. 账户定义数据结构：
