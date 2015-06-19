@@ -12,6 +12,9 @@ import (
 	"time"
 )
 
+var pubkey = "-----BEGIN PGP PUBLIC KEY BLOCK-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nxsBNBFWDX8oBB/9JNcxBZ0mUv0I19tPou8mNLTh6lAUUZBTMkoy9rJbQJDif\nGHjdUMpKaIEkju57kXp/D1XbmAmyy3E7tA+UPwCICWUkbpn5o9RyAe8elsmC\ni+ZuS03ObXCGWwMENQBuWV2UrXeoUJOVqRjywkipX49prV81E3m2Rg6irMXl\nFkq9a8UcfYo3r75S5qmWLJk4FjQepQTPgdv6jopoM/Tt7/HGzQ476V148q/U\nMLxcx3qZV9AZ7l/aJn1GBSd+zCw598Zlkum7GREua6QfC66knFTrm2bF4ph/\narP1XAQ9FaFQG4pJJTtK8PHS+8q1DcCw696iuCf82cPlKhFA7hS9r3KlABEB\nAAHNDzEyMyAoMTIzKSA8MTIzPsLAcgQQAQgAJgUCVYNf0wYLCQgHAwIJEPYH\nCuTH7BSlBBUIAgoDFgIBAhsDAh4BAABNVgf9HbbipF1//ynSYNK7dsUV3NPb\nuMD6VAtTGpwWMvczui92enpTEKFKZ6wIBsUafo4+HD2l1TXHmaWRPNO4JAh0\nHj+Jyyw+QYg1nR/vvBm4GantdahhuTCvL+1S3UXBSxLgAC/RGGGM+o0mndCh\naZSeW0x0tJUrakKEE5cH0Gmq1h/gtiTmZLv9jux8b1SBl2J3XUmHLEECEB+y\nb14V7tJSVUFjT24sD7Q97R6VSCpQMEw2zsuyajv7C1dO30jeVlvNqhHTGl3D\nLvL9L2lQJ3bsin+p9rpXQhueZqzL/Y+ls+tD7HZoXEIxjSFfzER36lHRb1WP\nETn1keUzOzpUwolGac7ATQRVg1/PAQgA5hq5BKEjzQ3QI6xBGHW5fvsrw5/h\neSvGc2LehvU1rqlQwvv3Do7dVBOiV/lXAmdrxiMj8xRjJ96OFWXgsctzU9sc\nMV015k0xP031UTGRoJAN+Wbgmy1F1nxnib1LPhtRY0e+laX3WYS60mmRoBIR\nOQKXM2AMXeYi2pflPvkgvUX3bY5B9E5N43W/Vfz/T7XG0prSyzXJiU4yGoFP\nOCNkrOhRY79nBoIpCHtDGDStKRT++I63oJyYvneFHa2T2ByyXDOwSut/Kit/\nT9m8+6HCN23rV99/5oYB+X1HMfsvn2KqcHfHluqpQubBeInpztWWVKxpyJmz\nfKdacOxBEOmi0wARAQABwsBfBBgBCAATBQJVg1/UCRD2Bwrkx+wUpQIbDAAA\npjEH/0gJF5mm47uLMjjvg4G72RWfZ/vcutG6fsbRfoUd8Rxa4GNgYFnOEZY/\nDcm/6rPw5hkIYrEC6x+IyjKXqzcSpcy9Ur24wsa6SRLWOAZ+ACimorHUq+Xt\n2qqm+2zlmEj6dNS7RklCCxXntR3n1bjSM6dUOYW8yE4Z3055OXzCiT9ycs4A\nuDv/ZgheVOvoRnD6TkcDJOI3Lqb4So3BE9IHaNxV+zsu6+L9u8JF4Lnnv+EJ\nUwW4SFddjr+Yh3MP54+ZVYsNOikNZJ2VWo0Jx9A+tkS0+tdlA/rDVeynis5G\nsduaelylIy596jpFeUgQs2RW9dEVS+nGvOlnVOMMUH26vQE=\r\n=cfA0\r\n-----END PGP PUBLIC KEY BLOCK-----\r\n\r\n"
+
+/*
 var pubkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: OpenPGP.js v0.9.0
 Comment: http://openpgpjs.org
@@ -45,6 +48,7 @@ h5QFXfe/zb9hpyvijz6hHjMkT8Ib9t9wvCN8HX1kTsWpyZoZmKSHlTJq1QhD
 CFCd8czWD6gsLigm4J0v6+W+ghlM4yxB
 =ZSZT
 -----END PGP PUBLIC KEY BLOCK-----`
+*/
 
 type NormalAccount struct {
 	ID         string
@@ -143,7 +147,7 @@ const (
 )
 
 func main() {
-	log.Printf("--- match:\n%s\n\n", MakeTransfer())
+	log.Printf("--- match:\n%s\n\n", MakeNormalAccount())
 }
 
 func MakeNormalAccount() string {

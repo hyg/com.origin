@@ -48,12 +48,12 @@ rl.question("请输入姓名：\n", function(answer) {
 				auto.keytype = 2;
 				auto.pubkey = key.publicKeyArmored;
 				auto.createtime = Date.parse(key.key.primaryKey.created);
-				auto.remark = "Auto Account Sample";
+				auto.remark = "Normal Account Sample";
 				
 				doc = yaml.safeDump(auto);
-				fs.writeFile(id+".auto",doc,function(err){
+				fs.writeFile(id+".nor",doc,function(err){
 					if(err) throw err;
-					console.log("账户文件 ",id+".auto 已保存.");
+					console.log("账户文件 ",id+".nor 已保存.");
 				});
 			});
 
