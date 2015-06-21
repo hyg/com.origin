@@ -7,8 +7,8 @@ var url = require("url"),
 	map = require('through2-map'),
 	mime = require("mime").types;
 
-var CfgIdx = yaml.safeLoad(fs.readFileSync('data/cfg/index.yaml', 'utf8'));
-var LogIdx = yaml.safeLoad(fs.readFileSync('data/log/index.yaml', 'utf8'));
+var CfgIdx = yaml.safeLoad(fs.readFileSync('cfg/index.yaml', 'utf8'));
+var LogIdx = yaml.safeLoad(fs.readFileSync('log/index.yaml', 'utf8'));
 
 var server = http.createServer(function (req, res) {
 	if(req.method == 'POST') {
@@ -25,7 +25,7 @@ var server = http.createServer(function (req, res) {
 			//if (! (key in LogIdx)) { 
 				LogIdx[key] = 0;
 				LogIdx.update = new Date().toLocaleString();
-				fs.writeFile("data/log/index.yaml",yaml.safeDump(LogIdx),function(err){
+				fs.writeFile("log/index.yaml",yaml.safeDump(LogIdx),function(err){
 					res.writeHead(201, {'Content-Type': 'text/plain'});
 					res.write("log notify: create a new key ["+key+"].\n");
 					console.log("log notify: create a new key ["+key+"].\n");
@@ -35,9 +35,9 @@ var server = http.createServer(function (req, res) {
 			
 			var filename;
 			if (body.cod == "") {
-				filename = "data/log/" + body.tag + "." + body.author + "." + (LogIdx[key]+1) + ".yaml";
+				filename = "log/" + body.tag + "." + body.author + "." + (LogIdx[key]+1) + ".yaml";
 			} else {
-				filename = "data/log/" + body.cod + "." + body.tag + "." + body.author + "." + (LogIdx[key]+1) + ".yaml";
+				filename = "log/" + body.cod + "." + body.tag + "." + body.author + "." + (LogIdx[key]+1) + ".yaml";
 			}
 			fs.exists(filename, function (exists) {
 				if (exists) {
@@ -55,7 +55,7 @@ var server = http.createServer(function (req, res) {
 						
 						LogIdx[key] = LogIdx[key] + 1;
 						LogIdx.update = new Date().toLocaleString();
-						fs.writeFileSync("data/log/index.yaml",yaml.safeDump(LogIdx));
+						fs.writeFileSync("log/index.yaml",yaml.safeDump(LogIdx));
 					});
 				}
 			})
@@ -68,9 +68,9 @@ var server = http.createServer(function (req, res) {
 			
 			var filename;
 			if (body.cod == "") {
-				filename = "data/cfg/" + body.tag + "." + body.author ;
+				filename = "cfg/" + body.tag + "." + body.author ;
 			} else {
-				filename = "data/cfg/" + body.cod + "." + body.tag + "." + body.author ;
+				filename = "cfg/" + body.cod + "." + body.tag + "." + body.author ;
 			}
 			if (body.index == -1) {
 				filename = filename + ".yaml";
@@ -94,11 +94,10 @@ var server = http.createServer(function (req, res) {
 				
 			fs.writeFile(filename,yaml.safeDump(body),function(err){
 				if(err) throw err;
-				console.log("cfg: "+filename+" saved.");
-				
-				CfgIdx[key] = new Date().toLocaleString();
+
+				CfgIdx[filename] = new Date().toLocaleString();
 				CfgIdx.update = new Date().toLocaleString();
-				fs.writeFileSync("data/cfg/index.yaml",yaml.safeDump(CfgIdx));
+				fs.writeFileSync("cfg/index.yaml",yaml.safeDump(CfgIdx));
 			});
 		}))
 	} 
