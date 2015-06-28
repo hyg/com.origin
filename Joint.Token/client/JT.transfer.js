@@ -131,11 +131,11 @@ function transfer(payerid,payeeid,amount,passphrase){
 				// success
 				
 				postbody.sig = pgpMessage;
-				logdata = yaml.safeDump(postbody);
+				postbody = yaml.safeDump(postbody);
 				
-				console.log(logdata);
-				console.log(logdata.length);
-				//fs.writeFileSync("logdata.yaml",logdata)
+				console.log(postbody);
+				console.log(postbody.length);
+				//fs.writeFileSync("postbody.yaml",postbody)
 				
 				var options = {
 				  hostname: config.server.url,
@@ -143,7 +143,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 				  method: 'POST',
 				  headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'//,
-					//'Content-Length': logdata.length
+					//'Content-Length': postbody.length
 				  }
 				};
 				
@@ -157,7 +157,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 				  });
 				});
 
-				req.write(logdata);
+				req.write(postbody);
 				req.end();
 				
 			}).catch(function(error) {
