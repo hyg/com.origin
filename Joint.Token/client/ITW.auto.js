@@ -60,7 +60,7 @@ function month(){
 	  port: config.server.port,
 	  method: 'POST',
 	  headers: {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/x-yaml'
 	  }
 	};
 	

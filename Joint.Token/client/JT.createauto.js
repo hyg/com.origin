@@ -44,7 +44,7 @@ function puttoserver(obj){
 	  port: config.server.port,
 	  method: 'PUT',
 	  headers: {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/x-yaml'
 	  }
 	};
 	
