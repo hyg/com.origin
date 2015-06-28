@@ -1,11 +1,12 @@
 var fs = require('fs');
-var readline = require('readline');
 var yaml = require('js-yaml');
+var https = require('https');
 var http = require('http');
+var Hashes = require('jshashes');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 
-makeauto();
+makeauto("https://raw.githubusercontent.com/hyg/com.origin/11b720423a470ec0fc0affcc63e5f5ca1ee5688a/Joint.Token/client/ITW.auto.js");
 
 function makeauto(url){
 	https.get(url,function (response){
@@ -27,7 +28,15 @@ function makeauto(url){
 }
 
 function puttoserver(obj){
-	putbody = yaml.safeDump(obj);
+	var putbody = new Object();
+	
+	putbody.cod = "ITW";
+	putbody.tag = "autoaccount";
+	putbody.author = "ITW";
+	putbody.index = -1;
+	putbody.cfg = yaml.safeDump(obj);;
+	
+	putbody = yaml.safeDump(putbody);
 	console.log(putbody);
 	
 	var options = {
