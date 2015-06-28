@@ -3,8 +3,11 @@ var fs = require('fs');
 var path = require('path');
 var readline = require('readline');
 var yaml = require('js-yaml');
+var http = require('http');
 
 var Hashes = require('jshashes')
+
+var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 
 process.stdin.setEncoding('utf8');
 process.stdout.setEncoding('utf8');
@@ -105,6 +108,52 @@ rl.question("\n\n请输入付款人ID：\n", function(answer) {
 							fs.writeFile("transfer.yaml",doc,function(err){
 								if(err) throw err;
 								console.log("转账文件 transfer.yaml 已保存.");
+								
+								var authorseckey = payerseckey;
+					
+								var postbody = new Object();
+								
+								postbody.cod = "";
+								postbody.tag = "transfer";
+								postbody.author = payer;
+								postbody.log = doc;
+								openpgp.signClearMessage(authorseckey,doc).then(function(pgpMessage){
+									// success
+									
+									postbody.sig = pgpMessage;
+									logdata = yaml.safeDump(postbody);
+									
+									console.log(logdata);
+									console.log(logdata.length);
+									//fs.writeFileSync("logdata.yaml",logdata)
+									
+									var options = {
+									  hostname: config.server.url,
+									  port: config.server.port,
+									  method: 'POST',
+									  headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'//,
+										//'Content-Length': logdata.length
+									  }
+									};
+									
+									console.log("sending transfer to server...")
+									var req = http.request(options, function(res) {
+									  console.log('STATUS: ' + res.statusCode);
+									  console.log('HEADERS: ' + JSON.stringify(res.headers));
+									  res.setEncoding('utf8');
+									  res.on('data', function (chunk) {
+										console.log('BODY: ' + chunk);
+									  });
+									});
+
+									req.write(logdata);
+									req.end();
+									
+								}).catch(function(error) {
+									// failure
+									console.log("签名失败！"+error);
+								});		
 							});
 						}).catch(function(error) {
 							// failure
