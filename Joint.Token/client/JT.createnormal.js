@@ -60,18 +60,18 @@ rl.question("请输入姓名：\n", function(answer) {
 					
 					var authorseckey = openpgp.key.readArmored(key.privateKeyArmored).keys[0];
 					
-					var logbody = new Object();
+					var postbody = new Object();
 					
-					logbody.cod = "";
-					logbody.tag = "nor";
-					logbody.author = id;
-					logbody.log = doc;
+					postbody.cod = "";
+					postbody.tag = "nor";
+					postbody.author = id;
+					postbody.log = doc;
 					if(authorseckey.decrypt(passphrase)){
 						openpgp.signClearMessage(authorseckey,doc).then(function(pgpMessage){
 							// success
 							console.log(pgpMessage);
-							logbody.sig = pgpMessage;
-							data = yaml.safeDump(logbody);
+							postbody.sig = pgpMessage;
+							data = yaml.safeDump(postbody);
 							
 							var options = {
 							  hostname: config.server.url,

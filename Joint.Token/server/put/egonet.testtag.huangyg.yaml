@@ -1,0 +1,12 @@
+cod: egonet
+tag: testtag
+index: -1
+author: huangyg
+cfg: |
+  cod: egonet
+  tag: testtag
+  index: -1
+  author: huangyg
+  cfg: cfgbody
+  sig: sig
+sig: sig
