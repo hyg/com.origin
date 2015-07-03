@@ -60,9 +60,9 @@ function postsync() {
 				});
 			}, function (err) {
 				if( err ) {
-					console.log('A file failed to save');
+					console.log('post:A file failed to save');
 				} else {
-					console.log('All files have been saved successfully');
+					console.log('post:All files have been saved successfully');
 				}
 			});
 			
@@ -80,45 +80,44 @@ function putsync() {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			globalPutIdx = yaml.safeLoad(chunk);
-			for (var key in globalPutIdx) {
+			
+			async.forEachOf(globalPutIdx, function (value, key, callback) {
 				console.log("key:\t"+key);
-				if (key == "update") continue;
+				if (key == "update") {
+					callback();
+					return;
+				};
 				if (!localPutIdx.hasOwnProperty(key)) {
 					localPutIdx[key] = localPutIdx['update'];
 				}
 				console.log(localPutIdx[key]);
 				console.log(globalPutIdx[key]);
-				if (localPutIdx[key] < globalPutIdx[key]){
-					putfileArray.push(key) ;
+				if (Date.parse(localPutIdx[key]) < Date.parse(globalPutIdx[key])){
+					var fileaddr = "http://"+config.server.url+":"+config.server.port+'/put/'+key;
+					var filename = "put/"+key;
+					var req = http.get(fileaddr, function(res) {
+						res.setEncoding('utf8');
+						res.on('data', function (chunk) {
+							fs.writeFileSync(filename,chunk);
+							console.log("Put: "+filename+" saved.");
+							callback();
+						  });
+					}).on('error', function(e) {
+						console.log('problem with request: ' + e.message);
+					});
 					localPutIdx[key] = globalPutIdx[key];
 				}
-			}
-			
-			console.log(putfileArray);
-			
-			async.each(putfileArray, function (item, callback) {
-				var fileaddr = "http://"+config.server.url+":"+config.server.port+'/put/'+item;
-				var filename = "put/"+item;
-				var req = http.get(fileaddr, function(res) {
-					res.setEncoding('utf8');
-					res.on('data', function (chunk) {
-						fs.writeFileSync(filename,chunk);
-						console.log("Put: "+filename+" saved.");
-						callback(null);
-					  });
-				}).on('error', function(e) {
-					console.log('problem with request: ' + e.message);
-				});
-			}, function (err) {
-				if( err ) {
-					console.log('A file failed to save');
+			},
+			function (err) {
+			  if( err ) {
+					console.log('put:A file failed to save');
 				} else {
-					console.log('All files have been saved successfully');
+					console.log('put:All files have been saved successfully');
 				}
 			});
 			
 			localPutIdx.update = new Date().toLocaleString();
-			fs.writeFileSync("Put/index.yaml",yaml.safeDump(localPutIdx));
+			fs.writeFileSync("put/index.yaml",yaml.safeDump(localPutIdx));
 		});
 	}).on('error', function(e) {
 	  console.log('problem with request: ' + e.message);
