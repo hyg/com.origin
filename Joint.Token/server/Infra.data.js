@@ -67,9 +67,9 @@ var server = http.createServer(function (req, res) {
 			
 			var filename;
 			if (body.cod == "") {
-				filename = "put/" + body.tag + "." + body.author ;
+				filename = body.tag + "." + body.author ;
 			} else {
-				filename = "put/" + body.cod + "." + body.tag + "." + body.author ;
+				filename = body.cod + "." + body.tag + "." + body.author ;
 			}
 			if (body.index == -1) {
 				filename = filename + ".yaml";
@@ -91,7 +91,7 @@ var server = http.createServer(function (req, res) {
 				}
 			});
 				
-			fs.writeFile(filename,yaml.safeDump(body),function(err){
+			fs.writeFile("put/" + filename,yaml.safeDump(body),function(err){
 				if(err) throw err;
 
 				PutIdx[filename] = new Date().toLocaleString();
