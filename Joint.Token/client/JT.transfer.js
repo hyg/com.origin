@@ -110,7 +110,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 	item.type = 3;
 	item.data = datastr;
 	item.hashtype = 1;
-	item.hash = new Hashes.SHA512().b64(datastr)
+	item.hash = new Hashes.SHA512().b64(datastr);
 	
 	if(payerseckey.decrypt(passphrase)){
 		openpgp.signClearMessage(payerseckey,datastr).then(function(pgpMessage){
@@ -142,8 +142,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 				  port: config.server.port,
 				  method: 'POST',
 				  headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'//,
-					//'Content-Length': postbody.length
+					'Content-Type': 'application/x-yaml'
 				  }
 				};
 				

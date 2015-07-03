@@ -102,12 +102,12 @@ var server = http.createServer(function (req, res) {
 	} 
 	if(req.method == 'GET') {
 		var pathname = url.parse(req.url).pathname;
-		var realPath = "data" + pathname;
+		var realPath = pathname.substring(1);
 		console.log(realPath);
 		fs.exists(realPath, function (exists) {
 			if (!exists) {
 				res.writeHead(404, {'Content-Type': 'text/plain'});
-				res.write("访问路径没有找到。");
+				res.write("访问路径没有找到。","utf8");
 				res.end();
 			} else {
 				//fs.createReadStream(realPath).pipe(res)
