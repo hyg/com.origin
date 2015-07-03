@@ -1,67 +1,36 @@
 var yaml = require('js-yaml');
 var http = require('http');
 var fs = require('fs');
-//var async = require('async');
+var sync = require('./JT.sync');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 var postidx ;
 var addr = "http://"+config.server.url+":"+config.server.port+'/post/index.yaml';
-//console.log(addr);
+var balance = new Object();
 
-getidx();
+sync.postsync(getidx);
 
 function getidx(){
-	var req = http.get(addr, function(res) {
-	  //console.log('STATUS: ' + res.statusCode);
-	  //console.log('HEADERS: ' + JSON.stringify(res.headers));
-	  res.setEncoding('utf8');
-	  res.on('data', function (chunk) {
-		//console.log('BODY: ' + chunk);
-		postidx = yaml.safeLoad(chunk);
-		//console.log(postidx);
-		check(postidx);
-
-	  });
-	}).on('error', function(e) {
-	  console.log('problem with request: ' + e.message);
-	});
+	postidx = yaml.safeLoad(fs.readFileSync('post/index.yaml', 'utf8'));
+	check(postidx);
 }
-
-var cnt = 0;
 
 function check(idx) {
 	for (var key in idx) {
 		if(key.substr(0,9) == "transfer."){
-			cnt = cnt + idx[key];
 			for (var i=1;i<=idx[key];i++) {
-				var fileaddr = "http://"+config.server.url+":"+config.server.port+'/post/'+key+"."+i.toString()+".yaml";
-				//console.log(fileaddr);
-				var req = http.get(fileaddr, function(res) {
-				  //console.log('STATUS: ' + res.statusCode);
-				  //console.log('HEADERS: ' + JSON.stringify(res.headers));
-				  res.setEncoding('utf8');
-				  res.on('data', function (chunk) {
-					//console.log('BODY: ' + chunk);
-					var obj = yaml.safeLoad(chunk);
-					var log = yaml.safeLoad(obj.log);
-					var data = yaml.safeLoad(log.data);
-					//console.log(data);
-					read(data);
-					cnt = cnt - 1;
-					if (cnt == 0) {
-						console.log(balance);
-					}
-				  });
-				}).on('error', function(e) {
-				  console.log('problem with request: ' + e.message);
-				});
+				var filename = 'post/'+key+"."+i.toString()+".yaml";
+				
+				var obj = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
+				var log = yaml.safeLoad(obj.log);
+				var data = yaml.safeLoad(log.data);
+				
+				read(data);
 			}
-			
 		}
 	}
+	console.log(balance);
 }
-
-var balance = new Object();
 
 function read(data) {
 	//checksig();
