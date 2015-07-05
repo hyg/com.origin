@@ -67,7 +67,9 @@ function postsync(finish) {
 					localPostIdx.update = new Date().toLocaleString();
 					fs.writeFileSync("post/index.yaml",yaml.safeDump(localPostIdx));
 					//console.log('post:All files have been saved successfully');
-					finish();
+					if (typeof(finish) != "undefined") {
+						finish();
+					}
 				}
 			});
 		});
@@ -116,8 +118,10 @@ function putsync(finish) {
 				} else {
 					localPutIdx.update = new Date().toLocaleString();
 					fs.writeFileSync("put/index.yaml",yaml.safeDump(localPutIdx));
-					//console.log('put:All files have been saved successfully');
-					finish();
+					console.log('put:All files have been saved successfully');
+					if (typeof(finish) != "undefined") {
+						finish();
+					}
 				}
 			});
 		});

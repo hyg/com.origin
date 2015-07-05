@@ -26,9 +26,22 @@ function listkey(b) {
 		if (path.extname(item) === '.sec'){
 			var seckey = openpgp.key.readArmored(fs.readFileSync(item,'utf8')).keys[0];
 			secuserinfo[seckey.primaryKey.fingerprint] = seckey.users[0].userId.userid;
-		}else if (path.extname(item) === '.pub'){
-			var pubkey = openpgp.key.readArmored(fs.readFileSync(item,'utf8')).keys[0];
+		}
+	});
+	
+	files = fs.readdirSync("put/");
+	// list the public key
+	files.forEach(function(item) {
+		if(item.substr(0,4) == "nor."){
+			var putbody = yaml.safeLoad(fs.readFileSync("put/"+item,'utf8'));
+			var cfg = yaml.safeLoad(putbody.cfg);
+			var pubkey = openpgp.key.readArmored(cfg.pubkey).keys[0];
 			pubuserinfo[pubkey.primaryKey.fingerprint] = pubkey.users[0].userId.userid;
+		}else if(item.substr(0,5) == "auto."){
+			var putbody = yaml.safeLoad(fs.readFileSync("put/"+item,'utf8'));
+			var cfg = yaml.safeLoad(putbody.cfg);
+
+			pubuserinfo[cfg.id] = putbody.author;
 		}
 	});
 	

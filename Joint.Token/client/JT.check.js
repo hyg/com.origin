@@ -14,6 +14,7 @@ var f = new Function();
 
 function getBalance(finish){
 	sync.postsync(getidx);
+	sync.putsync();
 	f = finish ;
 }
 

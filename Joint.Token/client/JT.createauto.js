@@ -30,8 +30,8 @@ function makeauto(url){
 function puttoserver(obj){
 	var putbody = new Object();
 	
-	putbody.cod = "ITW";
-	putbody.tag = "autoaccount";
+	putbody.cod = "";
+	putbody.tag = "auto";
 	putbody.author = "ITW";
 	putbody.index = -1;
 	putbody.cfg = yaml.safeDump(obj);;
