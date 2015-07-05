@@ -8,11 +8,19 @@ var postidx ;
 var addr = "http://"+config.server.url+":"+config.server.port+'/post/index.yaml';
 var balance = new Object();
 
-sync.postsync(getidx);
+exports.getBalance = getBalance;
+
+var f = new Function();
+
+function getBalance(finish){
+	sync.postsync(getidx);
+	f = finish ;
+}
 
 function getidx(){
 	postidx = yaml.safeLoad(fs.readFileSync('post/index.yaml', 'utf8'));
 	check(postidx);
+	f(balance);
 }
 
 function check(idx) {

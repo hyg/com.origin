@@ -4,63 +4,80 @@ var path = require('path');
 var readline = require('readline');
 var yaml = require('js-yaml');
 var http = require('http');
-
 var Hashes = require('jshashes')
+var check = require('./JT.check');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
+var secuserinfo = new Object();
+var pubuserinfo = new Object();
+var balance = new Object();
 
-process.stdin.setEncoding('utf8');
-process.stdout.setEncoding('utf8');
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+check.getBalance(listkey);
 
-var files = fs.readdirSync(".");
-// list the private key
-console.log('可选的付款人:name[id]');
-files.forEach(function(item) {
-    if (path.extname(item) === '.sec'){
-		var nor = yaml.safeLoad(fs.readFileSync(path.basename(item,'.sec')+".nor", 'utf8'));
-		console.log(path.basename(item,'.sec')+"\t["+nor.id+"]");
+
+function listkey(b) {
+	balance = b;
+	secuserinfo = new Object();
+	pubuserinfo = new Object();
+	
+	var files = fs.readdirSync(".");
+	// list the private key
+	files.forEach(function(item) {
+		if (path.extname(item) === '.sec'){
+			var seckey = openpgp.key.readArmored(fs.readFileSync(item,'utf8')).keys[0];
+			secuserinfo[seckey.primaryKey.fingerprint] = seckey.users[0].userId.userid;
+		}else if (path.extname(item) === '.pub'){
+			var pubkey = openpgp.key.readArmored(fs.readFileSync(item,'utf8')).keys[0];
+			pubuserinfo[pubkey.primaryKey.fingerprint] = pubkey.users[0].userId.userid;
+		}
+	});
+	
+	console.log("可选的付款人:")
+	for (var key in secuserinfo) {
+		console.log("账号：\t"+key+"\n户主：\t"+secuserinfo[key]+"\n余额：\t"+b[key]+"\n");
 	}
-});
-
-// list the public key
-console.log('可选的收款人:name[id]');
-files.forEach(function(item) {
-	if (path.extname(item) === '.pub'){
-		var nor = yaml.safeLoad(fs.readFileSync(path.basename(item,'.pub')+".nor", 'utf8'));
-		console.log(path.basename(item,'.pub')+"\t["+nor.id+"]");
+	
+	console.log("可选的收款人:")
+	for (var key in pubuserinfo) {
+		console.log("账号：\t"+key+"\n户主：\t"+pubuserinfo[key]+"\n余额：\t"+b[key]+"\n");
 	}
-});
+	
+	askandtransfer();
+}
 
-// choice one as payer
-var payer,payee,amount,passphrase;
+function askandtransfer(){
+	process.stdin.setEncoding('utf8');
+	process.stdout.setEncoding('utf8');
+	var rl = readline.createInterface({
+	  input: process.stdin,
+	  output: process.stdout
+	});
+	// choice one as payer
+	var payer,payee,amount,passphrase;
 
-rl.question("\n\n请输入付款人name：\n", function(answer) {
-	payer = answer;
-
-	rl.question("请输入收款人name：\n", function(answer) {
-		payee = answer;
-
-		rl.question("请输入付款金额：\n", function(answer) {
-			var input = Number(answer);
-			if (isNaN(input)) {
-				console.log("金额不对呀");
-			} else {
-				amount = input;
-				
-				rl.question("请输入付款人私钥口令：\n", function(answer) {
-					passphrase = answer;
-					rl.close();
+	rl.question("\n\n请输入付款人name：\n", function(answer) {
+		payer = answer;
+		rl.question("请输入收款人name：\n", function(answer) {
+			payee = answer;
+			rl.question("请输入付款金额：\n", function(answer) {
+				var input = Number(answer);
+				if (isNaN(input)) {
+					console.log("金额不对呀");
+				} else {
+					amount = input;
 					
-					transfer(payer,payee,amount,passphrase);
-				});
-			}
+					rl.question("请输入付款人私钥口令：\n", function(answer) {
+						passphrase = answer;
+						rl.close();
+						
+						transfer(payer,payee,amount,passphrase);
+					});
+				}
+			});
 		});
 	});
-});
+}
+
 
 /*
 * type: 账目种类
@@ -125,7 +142,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 			
 			postbody.cod = "";
 			postbody.tag = "transfer";
-			postbody.author = payer;
+			postbody.author = payerid;
 			postbody.log = doc;
 			openpgp.signClearMessage(authorseckey,doc).then(function(pgpMessage){
 				// success
