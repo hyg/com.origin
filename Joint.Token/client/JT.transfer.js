@@ -65,7 +65,13 @@ function askandtransfer(){
 					console.log("金额不对呀");
 				} else {
 					amount = input;
-					
+					var payerpubkey = openpgp.key.readArmored(fs.readFileSync(payer + ".pub",'utf8')).keys[0];
+					if(balance[payerpubkey.primaryKey.fingerprint] < amount) {
+						console.log("余额不足。");
+						//return;
+						process.exit()
+					};
+
 					rl.question("请输入付款人私钥口令：\n", function(answer) {
 						passphrase = answer;
 						rl.close();
@@ -100,9 +106,9 @@ function askandtransfer(){
 
 function transfer(payerid,payeeid,amount,passphrase){
 	var payersecfile = payerid + ".sec";
-	var payerpubfile = payerid + ".pub";
+	//var payerpubfile = payerid + ".pub";
 	var payerseckey = openpgp.key.readArmored(fs.readFileSync(payersecfile,'utf8')).keys[0];
-	var payerpubkey = openpgp.key.readArmored(fs.readFileSync(payerpubfile,'utf8')).keys[0];
+	//var payerpubkey = openpgp.key.readArmored(fs.readFileSync(payerpubfile,'utf8')).keys[0];
 	
 	var payeepubfile = payeeid + ".pub";
 	var payeepubkey = openpgp.key.readArmored(fs.readFileSync(payeepubfile,'utf8')).keys[0];
@@ -111,7 +117,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 	var input = new Object();
 	var output = new Object();
 	data.jtid = '1c636fec7bdfdcd6bb0a3fe049e160d354fe9806';	// just for debug
-	input.id = payerpubkey.primaryKey.fingerprint;
+	input.id = payerseckey.primaryKey.fingerprint;
 	input.amount = amount;
 	data.input = input;
 	output.id = payeepubkey.primaryKey.fingerprint;
