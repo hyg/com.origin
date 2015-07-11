@@ -1,13 +1,34 @@
 var https = require('https');
 var fs = require('fs');
+var yaml = require('js-yaml');
 var events = require('events');
 var emitter = new events.EventEmitter();
+var serialize = require('node-serialize');
 
-var ticket = require('./ticket')
+//var ticket = require('./ticket');
 
-emitter.on("ticket1",eval("ticket.t1"));
-emitter.on("ticket2",ticket.t2);
-emitter.emit("ticket1");
+function temp(stream) {
+	console.log(process.execPath);
+	console.log(process.cwd());
+	var ticket = require('./ticket');
+	ticket.t2(stream);
+}
+
+//emitter.on("ticket1",eval("function t1(stream) {var ticket = require('./ticket');ticket.t1();}"));
+emitter.on("ticket2",temp);
+
+
+
+console.log(emitter);
+var objS = serialize.serialize(emitter._events);
+console.log(objS);
+
+var obj = new events.EventEmitter();
+obj._events = serialize.unserialize(objS);
+console.log(obj);
+
+//emitter.emit("ticket2");
+obj.emit("ticket2");
 
 /*
 https.get("https://raw.githubusercontent.com/hyg/js.sample/master/learnyounode/6.module.js",function (response){

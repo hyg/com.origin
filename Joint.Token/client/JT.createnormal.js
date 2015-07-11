@@ -3,6 +3,7 @@ var fs = require('fs');
 var readline = require('readline');
 var yaml = require('js-yaml');
 var http = require('http');
+var Hashes = require('jshashes');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 
@@ -45,61 +46,50 @@ rl.question("请输入姓名：\n", function(answer) {
 					//var date = new Date(time*1000);
 					//console.log("create time :",date.toUTCString());
 
-					var auto = new Object();
+					var data = new Object();
 					
-					auto.id = key.key.primaryKey.fingerprint;
-					auto.keytype = 2;
-					auto.pubkey = key.publicKeyArmored;
-					auto.createtime = Date.parse(key.key.primaryKey.created);
-					auto.remark = "Normal Account Sample";
+					data.id = key.key.primaryKey.fingerprint;
+					data.keytype = 2;
+					data.pubkey = key.publicKeyArmored;
+					data.createtime = Date.parse(key.key.primaryKey.created);
+					data.remark = "Normal Account";
 					
-					doc = yaml.safeDump(auto);
+					doc = yaml.safeDump(data);
 					fs.writeFile(id+".nor",doc,function(err){
 						if(err) throw err;
 						console.log("账户文件 ",id+".nor 已保存.");
 						
 						var authorseckey = openpgp.key.readArmored(key.privateKeyArmored).keys[0];
 						
-						var postbody = new Object();
+						var item = new Object();
 						
-						postbody.cod = "";
-						postbody.tag = "nor";
-						postbody.author = id;
-						postbody.index = -1;
-						postbody.cfg = doc;
-						if(authorseckey.decrypt(passphrase)){
-							openpgp.signClearMessage(authorseckey,doc).then(function(pgpMessage){
-								// success
-								console.log(pgpMessage);
-								postbody.sig = pgpMessage;
-								data = yaml.safeDump(postbody);
-								
-								var options = {
-								  hostname: config.server.url,
-								  port: config.server.port,
-								  method: 'PUT',
-								  headers: {
-									'Content-Type': 'application/x-www-form-urlencoded'//,
-									//'Content-Length': data.length
-								  }
-								};
-								
-								console.log("sending account to server...")
-								var req = http.request(options, function(res) {
-								  console.log('STATUS: ' + res.statusCode);
-								  console.log('HEADERS: ' + JSON.stringify(res.headers));
-								  res.setEncoding('utf8');
-								  res.on('data', function (chunk) {
-									console.log('BODY: ' + chunk);
-								  });
-								});
-								req.write(data);
-								req.end();
-							}).catch(function(error) {
-								// failure
-								console.log("签名失败！"+error);
-							});
-						}
+						item.cod = "";
+						item.tag = "nor";
+						item.author = id;
+						item.data = data;
+						item.sigtype = 0;
+						
+						itemyaml = yaml.safeDump(item);
+						var options = {
+						  hostname: config.server.url,
+						  port: config.server.port,
+						  method: 'POST',
+						  headers: {
+							'Content-Type': 'application/x-yaml'
+						  }
+						};
+						
+						console.log("sending account to server...")
+						var req = http.request(options, function(res) {
+						  console.log('STATUS: ' + res.statusCode);
+						  console.log('HEADERS: ' + JSON.stringify(res.headers));
+						  res.setEncoding('utf8');
+						  res.on('data', function (chunk) {
+							console.log('BODY: ' + chunk);
+						  });
+						});
+						req.write(itemyaml);
+						req.end();
 					});
 				});
 			});

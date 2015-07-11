@@ -4,7 +4,7 @@ var path = require('path');
 var readline = require('readline');
 var yaml = require('js-yaml');
 var http = require('http');
-var Hashes = require('jshashes')
+var Hashes = require('jshashes');
 var check = require('./JT.check');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
