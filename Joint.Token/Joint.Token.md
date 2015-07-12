@@ -93,11 +93,16 @@ Joint Token
 		- remark: 备注文本。
 	2.  yaml范例：
 		<pre>
-			id: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806
-			codetype: 1
-			codeurl: raw.githubusercontent.com/hyg/js.sample/master/openpgp/openpgp.min.js
-			createtime: 2015-05-30 16:07:43
-			remark: Account Sample
+		cod: ITW
+		tag: auto
+		author: huangyg
+		data:
+		  id: rorRwGyyGYgU1KK0b6L4Xuvl0lfEj4H7WlgF/o5x8RCkamHcukypcSlY43I6WDWivMvEG6dBiOm7Uza7ugw0pg==
+		  codetype: 1
+		  codeurl: 'https://raw.githubusercontent.com/hyg/com.origin/11b720423a470ec0fc0affcc63e5f5ca1ee5688a/Joint.Token/client/ITW.auto.js'
+		  createtime: 1436695429259
+		  remark: ITW.auto
+		sigtype: 0
 		</pre>
 3. 根账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID，同时也是这种JT的ID。这组源代码定义了所有发行和销毁操作，对每种操作定义了激发条件和内部唯一的操作ID。根账户由JT使用，每次发行和销毁规则升级将产生不同的根账户，实质上产生新种类的JT。
 	1. 账户定义数据结构：

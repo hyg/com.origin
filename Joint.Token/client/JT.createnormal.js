@@ -38,7 +38,7 @@ rl.question("请输入姓名：\n", function(answer) {
 					data.id = key.key.primaryKey.fingerprint;
 					data.keytype = 2;
 					data.pubkey = key.publicKeyArmored;
-					data.createtime = Date.parse(key.key.primaryKey.created);
+					data.createtime =  new Date().getTime();//Date.parse(key.key.primaryKey.created);
 					data.remark = "Normal Account";
 					
 					doc = yaml.safeDump(data);

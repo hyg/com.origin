@@ -17,7 +17,7 @@ function makeauto(url){
 			data.id = new Hashes.SHA512().b64(js.toString());
 			data.codetype = 1;
 			data.codeurl = url;
-			data.createtime = new Date().toLocaleString();
+			data.createtime = new Date().getTime();
 			data.remark = "ITW.auto";
 
 			posttoserver(data);
@@ -33,6 +33,7 @@ function posttoserver(obj){
 	item.tag = "auto";
 	item.author = "huangyg";
 	item.data = obj;
+	item.sigtype = 0;
 	
 	body = yaml.safeDump(item);
 	console.log(body);

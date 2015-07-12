@@ -151,7 +151,7 @@ function transfer(payerid,payeeid,amount,passphrase){
 	output.amount = amount;
 	data.output = output;
 	data.total = amount;
-	data.time = new Date().toLocaleString();
+	data.time =  new Date().getTime();//new Date().toLocaleString();
 	data.remark = "transfer sample";
 	console.log(data);
 	
