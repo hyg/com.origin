@@ -46,7 +46,7 @@ var server = http.createServer(function (req, res) {
 					fs.writeFile(filename,yaml.safeDump(body),function(err){
 						if(err) throw err;
 						res.writeHead(201, {'Content-Type': 'text/plain'});
-						res.write( "post: "+filename+" saved.");
+						res.write( key  + "." + (PostIdx[key]+1) );
 						res.end();
 						console.log("post: "+filename+" saved.");
 						

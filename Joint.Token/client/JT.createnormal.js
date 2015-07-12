@@ -33,20 +33,6 @@ rl.question("请输入姓名：\n", function(answer) {
 				console.log("正在创建密钥对，需要几十秒时间，请稍候。。。");
 
 				openpgp.generateKeyPair(opt).then(function(key) {
-					fs.writeFile(id+".pub",key.publicKeyArmored,function(err){
-						if(err) throw err;
-						console.log("公钥文件 ",id+".pub 已保存.");
-					});
-					fs.writeFile(id+".sec",key.privateKeyArmored,function(err){
-						if(err) throw err;
-						console.log("私钥文件 ",id+".sec 已保存.");
-					});
-					
-					//console.log("fingerprint :",key.key.primaryKey.fingerprint );
-					//var time = Date.parse(key.key.primaryKey.created) ;
-					//var date = new Date(time*1000);
-					//console.log("create time :",date.toUTCString());
-
 					var data = new Object();
 					
 					data.id = key.key.primaryKey.fingerprint;
@@ -56,42 +42,45 @@ rl.question("请输入姓名：\n", function(answer) {
 					data.remark = "Normal Account";
 					
 					doc = yaml.safeDump(data);
-					fs.writeFile(id+".nor",doc,function(err){
-						if(err) throw err;
-						console.log("账户文件 ",id+".nor 已保存.");
-						
-						var authorseckey = openpgp.key.readArmored(key.privateKeyArmored).keys[0];
-						
-						var item = new Object();
-						
-						//item.cod = "";
-						item.tag = "nor";
-						item.author = id;
-						item.data = data;
-						item.sigtype = 0;
-						
-						itemyaml = yaml.safeDump(item);
-						var options = {
-						  hostname: config.server.url,
-						  port: config.server.port,
-						  method: 'POST',
-						  headers: {
-							'Content-Type': 'application/x-yaml'
-						  }
-						};
-						
-						console.log("sending account to server...")
-						var req = http.request(options, function(res) {
-						  console.log('STATUS: ' + res.statusCode);
-						  console.log('HEADERS: ' + JSON.stringify(res.headers));
-						  res.setEncoding('utf8');
-						  res.on('data', function (chunk) {
-							console.log('BODY: ' + chunk);
-						  });
+					var authorseckey = openpgp.key.readArmored(key.privateKeyArmored).keys[0];
+					
+					var item = new Object();
+					
+					//item.cod = "";
+					item.tag = "nor";
+					item.author = id;
+					item.data = data;
+					item.sigtype = 0;
+					
+					itemyaml = yaml.safeDump(item);
+					var options = {
+					  hostname: config.server.url,
+					  port: config.server.port,
+					  method: 'POST',
+					  headers: {
+						'Content-Type': 'application/x-yaml'
+					  }
+					};
+					
+					console.log("sending account to server...")
+					var req = http.request(options, function(res) {
+					  console.log('STATUS: ' + res.statusCode);
+					  console.log('HEADERS: ' + JSON.stringify(res.headers));
+					  res.setEncoding('utf8');
+					  res.on('data', function (chunk) {
+						fs.writeFile(chunk+".pub",key.publicKeyArmored,function(err){
+							if(err) throw err;
+							console.log("公钥文件 ",chunk+".pub 已保存.");
 						});
-						req.write(itemyaml);
-						req.end();
+						fs.writeFile(chunk+".sec",key.privateKeyArmored,function(err){
+							if(err) throw err;
+							console.log("私钥文件 ",chunk+".sec 已保存.");
+						});
+						console.log('BODY: ' + chunk);
+					  });
 					});
+					req.write(itemyaml);
+					req.end();
 				});
 			});
 		});

@@ -45,7 +45,6 @@ function listkey(b) {
 			pubuserinfo[auto.data.id] = auto.cod;
 			pubfile[auto.data.id] = "post/"+item;
 		}
-		console.log(item.substr(item.indexOf("."),5));
 	});
 	
 	console.log("可选的付款人:")
@@ -174,7 +173,6 @@ function transfer(payerid,payeeid,amount,passphrase){
 			var authorseckey = payerseckey;
 			var postbody = new Object();
 			
-			postbody.cod = "";
 			postbody.tag = "transfer";
 			postbody.author = payerid;
 			postbody.log = doc;
