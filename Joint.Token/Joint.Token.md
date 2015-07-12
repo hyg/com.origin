@@ -56,8 +56,6 @@ Joint Token
 		- id: 账户ID。
 			- openpgp: fingerprint
 		- keytype: 密钥类型。
-			- 1:rsa
-			- 2:openpgp
 		- pubkey: 完整的公钥。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。
@@ -86,8 +84,6 @@ Joint Token
 	2. 账户定义数据结构：
 		- id: 账户ID。
 		- codetype: 源代码类型。
-			- 1:js
-			- 2:lua
 		- codeurl: 源代码路径。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。

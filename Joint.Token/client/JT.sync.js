@@ -3,6 +3,9 @@ var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var async = require('async');
+var events = require('events');
+
+var emitter = new events.EventEmitter();
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 var localPostIdx = yaml.safeLoad(fs.readFileSync('post/index.yaml', 'utf8'));
@@ -60,11 +63,23 @@ function postsync(finish) {
 						if((item.substr(item.indexOf(".")+1,5) == "auto.") || (item.substr(0,5) == "auto.")){
 							var auto = yaml.safeLoad(chunk);
 							var autofilename = item.substr(0,item.lastIndexOf(".")) + ".js" ;
+							
+							
+							
+							
 							console.log("new auto account: download "+auto.data.codeurl+" and saved as "+autofilename);
 							var autoget = https.get(auto.data.codeurl,function(res) {
 								res.setEncoding('utf8');
 								res.on('data', function (chunk) {
 									fs.writeFileSync(autofilename,chunk);
+									
+									var a = require("./"+autofilename);
+									for (var event in auto.data.listener){
+										var lf = auto.data.listener[event] ;
+										console.log("a."+lf);
+										emitter.on(event,eval("a."+lf));
+										console.log(emitter);
+									}
 								});
 							});
 						}

@@ -13,10 +13,15 @@ function makeauto(url){
 		response.on('data',function(js){
 			console.log(js.toString());
 			
+			var listener = new Object();
+			listener["month"] = "month" ;
+			listener["year"] = "year" ;
+			
 			var data = new Object();
 			data.id = new Hashes.SHA512().b64(js.toString());
 			data.codetype = 1;
 			data.codeurl = url;
+			data.listener = listener;
 			data.createtime = new Date().getTime();
 			data.remark = "ITW.auto";
 
