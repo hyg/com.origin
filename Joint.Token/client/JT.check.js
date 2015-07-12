@@ -38,7 +38,7 @@ function check(idx) {
 			}
 		}
 	}
-	console.log(balance);
+	//console.log(balance);
 }
 
 function read(data) {

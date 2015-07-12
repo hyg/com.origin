@@ -1,5 +1,6 @@
 var yaml = require('js-yaml');
 var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var async = require('async');
 
@@ -35,7 +36,7 @@ function postsync(finish) {
 				//console.log(globalPostIdx[key]);
 				if (localPostIdx[key] < globalPostIdx[key]){
 					for (var id = localPostIdx[key]+1;id <= globalPostIdx[key];id++) {
-						console.log("key:\t"+key+"\tid:\t"+id);
+						//console.log("key:\t"+key+"\tid:\t"+id);
 						
 						postfileArray.push(key+"."+id.toString()+".yaml") ;
 						
@@ -55,8 +56,21 @@ function postsync(finish) {
 					res.on('data', function (chunk) {
 						fs.writeFileSync(filename,chunk);
 						console.log("post: "+filename+" saved.");
+						
+						if((item.substr(item.indexOf(".")+1,5) == "auto.") || (item.substr(0,5) == "auto.")){
+							var auto = yaml.safeLoad(chunk);
+							var autofilename = item.substr(0,item.lastIndexOf(".")) + ".js" ;
+							console.log("new auto account: download "+auto.data.codeurl+" and saved as "+autofilename);
+							var autoget = https.get(auto.data.codeurl,function(res) {
+								res.setEncoding('utf8');
+								res.on('data', function (chunk) {
+									fs.writeFileSync(autofilename,chunk);
+								});
+							});
+						}
+						
 						callback();
-					  });
+					});
 				}).on('error', function(e) {
 					console.log('problem with request: ' + e.message);
 				});
@@ -86,7 +100,7 @@ function putsync(finish) {
 			globalPutIdx = yaml.safeLoad(chunk);
 			
 			async.forEachOf(globalPutIdx, function (value, key, callback) {
-				console.log("key:\t"+key);
+				//console.log("key:\t"+key);
 				if (key == "update") {
 					callback();
 					return;
@@ -94,8 +108,8 @@ function putsync(finish) {
 				if (!localPutIdx.hasOwnProperty(key)) {
 					localPutIdx[key] = localPutIdx['update'];
 				}
-				console.log(localPutIdx[key]);
-				console.log(globalPutIdx[key]);
+				//console.log(localPutIdx[key]);
+				//console.log(globalPutIdx[key]);
 				if (Date.parse(localPutIdx[key]) < Date.parse(globalPutIdx[key])){
 					var fileaddr = "http://"+config.server.url+":"+config.server.port+'/put/'+key;
 					var filename = "put/"+key;
