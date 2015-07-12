@@ -10,15 +10,15 @@ makeauto("https://raw.githubusercontent.com/hyg/com.origin/11b720423a470ec0fc0af
 
 function makeauto(url){
 	https.get(url,function (response){
-		response.on('data',function(data){
-			console.log(data.toString());
+		response.on('data',function(js){
+			console.log(js.toString());
 			
-			var auto = new Object();
-			auto.id = new Hashes.SHA512().b64(data.toString());
-			auto.codetype = 1;
-			auto.codeurl = url;
-			auto.createtime = new Date().toLocaleString();
-			auto.remark = "ITW.auto";
+			var data = new Object();
+			data.id = new Hashes.SHA512().b64(js.toString());
+			data.codetype = 1;
+			data.codeurl = url;
+			data.createtime = new Date().toLocaleString();
+			data.remark = "ITW.auto";
 
 			puttoserver(auto);
 

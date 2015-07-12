@@ -3,7 +3,6 @@ var fs = require('fs');
 var readline = require('readline');
 var yaml = require('js-yaml');
 var http = require('http');
-var Hashes = require('jshashes');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 
@@ -26,8 +25,10 @@ rl.question("请输入姓名：\n", function(answer) {
 				passphrase = answer;
 				rl.close();
 				
+				var UserId = name + " (" + id + ") <" + email + ">" ;
+				
 				var publicKey,privateKey;
-				var opt = {numBits: 2048, userId: name + " (" + id + ") <" + email + ">", passphrase: passphrase};
+				var opt = {numBits: 2048, userId: UserId, passphrase: passphrase};
 
 				console.log("正在创建密钥对，需要几十秒时间，请稍候。。。");
 
@@ -63,7 +64,7 @@ rl.question("请输入姓名：\n", function(answer) {
 						
 						var item = new Object();
 						
-						item.cod = "";
+						//item.cod = "";
 						item.tag = "nor";
 						item.author = id;
 						item.data = data;

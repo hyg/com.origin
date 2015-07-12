@@ -17,10 +17,10 @@ var server = http.createServer(function (req, res) {
 			console.log('BODY length: ' + chunk.length);
 			var body = yaml.load(chunk);
 			
-			if (body.cod == "") {
-				key = body.tag + "." + body.author;
-			} else {
+			if (body.hasOwnProperty("cod")) {
 				key = body.cod + "." + body.tag;
+			} else {
+				key = body.tag + "." + body.author;
 			}
 			if (!PostIdx.hasOwnProperty(key)) {
 			//if (! (key in PostIdx)) { 
@@ -33,10 +33,10 @@ var server = http.createServer(function (req, res) {
 			}
 			
 			var filename;
-			if (body.cod == "") {
-				filename = "post/" + body.tag + "." + body.author + "." + (PostIdx[key]+1) + ".yaml";
-			} else {
+			if (body.hasOwnProperty("cod")) {
 				filename = "post/" + body.cod + "." + body.tag + "." + body.author + "." + (PostIdx[key]+1) + ".yaml";
+			} else {
+				filename = "post/" + body.tag + "." + body.author + "." + (PostIdx[key]+1) + ".yaml";
 			}
 			fs.exists(filename, function (exists) {
 				if (exists) {
@@ -66,10 +66,10 @@ var server = http.createServer(function (req, res) {
 			var body = yaml.load(chunk);
 			
 			var filename;
-			if (body.cod == "") {
-				filename = body.tag + "." + body.author ;
-			} else {
+			if (body.hasOwnProperty("cod")) {
 				filename = body.cod + "." + body.tag + "." + body.author ;
+			} else {
+				filename = body.tag + "." + body.author ;
 			}
 			if (body.index == -1) {
 				filename = filename + ".yaml";

@@ -47,22 +47,36 @@ Joint Token
 
 ###账户
 1. 普通账户：以公钥（或其经过一组计算后的结果，opepgp类型取数字指纹）作为账户ID。该密钥对用于账户相关数字签名。
-	1. 账户定义数据结构：
+	1. Infra yaml文件规则
+		* cod: ""
+		* tag: "nor"
+		* author: openpgp的Userid
+		* data: 账户定义
+		* sigtype: 0 
+	2. 账户定义数据结构：
 		- id: 账户ID。
+			- openpgp: fingerprint
 		- keytype: 密钥类型。
 			- 1:rsa
 			- 2:openpgp
 		- pubkey: 完整的公钥。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。
-	2. yaml范例：
+	3. yaml范例：
 		<pre>
-			id: 834259147e2b3f45d242767cf6070ae4c7ec14a5
-			keytype: 2
-			pubkey: "-----BEGIN PGP PUBLIC KEY BLOCK-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nxsBNBFWDX8oBB/9JNcxBZ0mUv0I19tPou8mNLTh6lAUUZBTMkoy9rJbQJDif\nGHjdUMpKaIEkju57kXp/D1XbmAmyy3E7tA+UPwCICWUkbpn5o9RyAe8elsmC\ni+ZuS03ObXCGWwMENQBuWV2UrXeoUJOVqRjywkipX49prV81E3m2Rg6irMXl\nFkq9a8UcfYo3r75S5qmWLJk4FjQepQTPgdv6jopoM/Tt7/HGzQ476V148q/U\nMLxcx3qZV9AZ7l/aJn1GBSd+zCw598Zlkum7GREua6QfC66knFTrm2bF4ph/\narP1XAQ9FaFQG4pJJTtK8PHS+8q1DcCw696iuCf82cPlKhFA7hS9r3KlABEB\nAAHNDzEyMyAoMTIzKSA8MTIzPsLAcgQQAQgAJgUCVYNf0wYLCQgHAwIJEPYH\nCuTH7BSlBBUIAgoDFgIBAhsDAh4BAABNVgf9HbbipF1//ynSYNK7dsUV3NPb\nuMD6VAtTGpwWMvczui92enpTEKFKZ6wIBsUafo4+HD2l1TXHmaWRPNO4JAh0\nHj+Jyyw+QYg1nR/vvBm4GantdahhuTCvL+1S3UXBSxLgAC/RGGGM+o0mndCh\naZSeW0x0tJUrakKEE5cH0Gmq1h/gtiTmZLv9jux8b1SBl2J3XUmHLEECEB+y\nb14V7tJSVUFjT24sD7Q97R6VSCpQMEw2zsuyajv7C1dO30jeVlvNqhHTGl3D\nLvL9L2lQJ3bsin+p9rpXQhueZqzL/Y+ls+tD7HZoXEIxjSFfzER36lHRb1WP\nETn1keUzOzpUwolGac7ATQRVg1/PAQgA5hq5BKEjzQ3QI6xBGHW5fvsrw5/h\neSvGc2LehvU1rqlQwvv3Do7dVBOiV/lXAmdrxiMj8xRjJ96OFWXgsctzU9sc\nMV015k0xP031UTGRoJAN+Wbgmy1F1nxnib1LPhtRY0e+laX3WYS60mmRoBIR\nOQKXM2AMXeYi2pflPvkgvUX3bY5B9E5N43W/Vfz/T7XG0prSyzXJiU4yGoFP\nOCNkrOhRY79nBoIpCHtDGDStKRT++I63oJyYvneFHa2T2ByyXDOwSut/Kit/\nT9m8+6HCN23rV99/5oYB+X1HMfsvn2KqcHfHluqpQubBeInpztWWVKxpyJmz\nfKdacOxBEOmi0wARAQABwsBfBBgBCAATBQJVg1/UCRD2Bwrkx+wUpQIbDAAA\npjEH/0gJF5mm47uLMjjvg4G72RWfZ/vcutG6fsbRfoUd8Rxa4GNgYFnOEZY/\nDcm/6rPw5hkIYrEC6x+IyjKXqzcSpcy9Ur24wsa6SRLWOAZ+ACimorHUq+Xt\n2qqm+2zlmEj6dNS7RklCCxXntR3n1bjSM6dUOYW8yE4Z3055OXzCiT9ycs4A\nuDv/ZgheVOvoRnD6TkcDJOI3Lqb4So3BE9IHaNxV+zsu6+L9u8JF4Lnnv+EJ\nUwW4SFddjr+Yh3MP54+ZVYsNOikNZJ2VWo0Jx9A+tkS0+tdlA/rDVeynis5G\nsduaelylIy596jpFeUgQs2RW9dEVS+nGvOlnVOMMUH26vQE=\r\n=cfA0\r\n-----END PGP PUBLIC KEY BLOCK-----\r\n\r\n"
-			createtime: 1434673098000
-			remark: Auto Account Sample
+		cod: ''
+		tag: nor
+		author: huangyg
+		data:
+		  id: 85834628b7f4e430f017c0fb9f05150213095bf9
+		  keytype: 2
+		  pubkey: "-----BEGIN PGP PUBLIC KEY BLOCK-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nxsBNBFWg1XsBB/99kPc8gBW3k0ncfCbK6bR742vTU2VfNR85BscueV5JlQee\n/6mRRSWsh7VIHBOvbf1tBLIKbBmsWM+P96WbRX1iJVbt3FQ8IgawHAPgSCXH\nCLHtpg9E90dnGooUu3P6267Z0MZ3LkNU+Ynqszku+U/NQSHnxH1ouOkWHQWJ\nA40wK8LIxyVwZT/d5NwAeHkbZwfxsaAfViywiyWCh2iUZW4/FaGpXYnyMgKV\nXMniaNqucY6BJtRR3WKrWWUONOh9E9zzzmMMIPPWAdpcb7Hg48nvVh9NeA0t\nM1H+ueOruhhNC7iXRQTrCQ5z6Ydn4bbqdxUCUI4qtaLYmlbE+8D5+4CnABEB\nAAHNKOm7hOWLh+WImiAoaHVhbmd5ZykgPGh1YW5neWdAeHVlbWVuLmNvbT7C\nwHIEEAEIACYFAlWg1YgGCwkIBwMCCRCfBRUCEwlb+QQVCAIKAxYCAQIbAwIe\nAQAAvGoH/3loXBU5wvklsF4ixkCLnRhXYImC/TyV205cIATwWyeh4F//iIFm\nr42AyW2rBXDv6dC/g1tl2Ev/QBVpMUyH6I4qQC2EHQkbJ+70YqZFPFhZvN99\nNJ0CGZEeqUoLf4tGBe86y3v9U5De7inG8Px6TkiyNWbjK3NP6O1EZ80gYh3k\nyB1gIlq1YoZ3atIgQUBdigK2ftxVEE8EZCRMVadx1OdYWqSNyzOBIYQ5kgaM\n3uOvUPvuJIsc3aDImb+zlIjcXPSok8uJ9ffukpbfeM+L2tyvJfwUjXFqBqah\nkLFuA600udpc0uUceM4hB0X1Ct4oNOIhTj48+GiHV/YFAMLhREDOwE0EVaDV\nfgEH/3g+jIoPbzJYAZVHf3PC90c0DZyeXVzgX7aM3j+mAwfamNrGuslvY4qx\n+cCEhc97ppVZ20xCLMsjTOnnrRXb43vgrzs/Z3ekvgMOlffZ/qqgKNZW2qgx\no7bg9vRSh8BXPFQgpt6h3+yYgyrH5CJqAUzwZuivfn+ZqIFp22Oxmw1b582o\n3MhGyDR092qDZZ3Bb9etJg1OjUEqpzjSfdn9K8H3OF44Icqqo4RgV1C8A/df\ncUm5MZuIAO4BDCC/+GPTJh3QjM/QBnZbRigAb6RYPLfQ870YsH9gHHHkOs2k\nX4/dEOa7HGJTMvjq1IJnKzDkx7J3C4B54I2MauzvN+MxDycAEQEAAcLAXwQY\nAQgAEwUCVaDViAkQnwUVAhMJW/kCGwwAAHVoB/9EIltXcds+XnRCThgZFUSs\nf+c9ds+xyZiTis1fxvqY8jv2aTaBSicqZJD5c+lfF7sVsHcf5/kbUw5RfaaL\nS9vE/Ok4O2AZ1GGBw45CDpYaWFF7Zt+yAIAyJpFHjas+u2hVaBcrxWzhj8Pu\nwj52Tba6CZszd56qQebWJ0BdHaWSp08FmiRP9xSYte0ZOoSlUmorPnky1xCC\nkFltV1r972pGHuaD8SjL2+Q7mU8cW+4Crf/Z7Ct+cd46SKJcTV7i0faC4sO2\n9xWb8K/0ODZKhu5KWuzI1jkGhkZ23y6NvzBSJ0FUyW5Cxe2WaSor3JrD/5Cs\n9UWzN0SxC9V5FWjdDG7q\r\n=CCv8\r\n-----END PGP PUBLIC KEY BLOCK-----\r\n\r\n"
+		  createtime: 1436603771000
+		  remark: Normal Account
+		sigtype: 0
+
 		</pre>
+
 2. 自动账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID。这组源代码定义了所有支出操作，对每种操作定义了激发条件和内部唯一的操作ID。自动账户由利益共同体使用，每次规则升级将产生不同的自动账户。
 	1. 账户定义数据结构：
 		- id: 账户ID。
