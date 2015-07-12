@@ -16,7 +16,7 @@ var PMID = "56bf5fcf1697d2f088dd1e4461660df5a37aa194"; // the PM
 exports.month = month;
 exports.year = year;
 
-function month(stream){
+function year(stream){
 	console.log("year() called");
 }
 

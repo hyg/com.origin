@@ -6,7 +6,7 @@ var Hashes = require('jshashes');
 
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 
-makeauto("https://raw.githubusercontent.com/hyg/com.origin/b05111d0f6469f8f0f4938942899bcdc19bcbe86/Joint.Token/client/ITW.auto.huangyg.1.js");
+makeauto("https://raw.githubusercontent.com/hyg/com.origin/196cce5d5345764519daa9a70819adf0a337dea3/Joint.Token/client/ITW.auto.huangyg.1.js");
 
 function makeauto(url){
 	https.get(url,function (response){
