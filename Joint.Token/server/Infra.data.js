@@ -18,18 +18,16 @@ var server = http.createServer(function (req, res) {
 			var body = yaml.load(chunk);
 			
 			if (body.hasOwnProperty("cod")) {
-				key = body.cod + "." + body.tag;
+				key = body.cod + "." + body.tag + "." + body.author;
 			} else {
 				key = body.tag + "." + body.author;
 			}
 			if (!PostIdx.hasOwnProperty(key)) {
-			//if (! (key in PostIdx)) { 
 				PostIdx[key] = 0;
 				PostIdx.update = new Date().toLocaleString();
 				fs.writeFile("post/index.yaml",yaml.safeDump(PostIdx),function(err){
 					console.log("post notify: create a new key ["+key+"].\n");
 				});
-				
 			}
 			
 			var filename;
@@ -71,10 +69,10 @@ var server = http.createServer(function (req, res) {
 			} else {
 				filename = body.tag + "." + body.author ;
 			}
-			if (body.index == -1) {
-				filename = filename + ".yaml";
-			} else {
+			if (body.hasOwnProperty("index")) {
 				filename = filename + "." + body.index + ".yaml";
+			} else {
+				filename = filename + ".yaml";
 			}
 			
 			fs.exists(filename, function (exists) {

@@ -48,9 +48,8 @@ Joint Token
 ###账户
 1. 普通账户：以公钥（或其经过一组计算后的结果，opepgp类型取数字指纹）作为账户ID。该密钥对用于账户相关数字签名。
 	1. Infra yaml文件规则
-		* cod: ""
 		* tag: "nor"
-		* author: openpgp的Userid
+		* author: openpgp的Userid中间的id // Userid = "name (id) <email>"
 		* data: 账户定义
 		* sigtype: 0 
 	2. 账户定义数据结构：
@@ -78,7 +77,13 @@ Joint Token
 		</pre>
 
 2. 自动账户：以一组源代码的数字摘要（或其经过一组计算后的结果）作为账户ID。这组源代码定义了所有支出操作，对每种操作定义了激发条件和内部唯一的操作ID。自动账户由利益共同体使用，每次规则升级将产生不同的自动账户。
-	1. 账户定义数据结构：
+	1. Infra yaml文件规则
+		* cod: 如果术语COD，就写COD的名称
+		* tag: "auto"
+		* author: 发布者的openpgp的Userid中间的id // Userid = "name (id) <email>"
+		* data: 账户定义
+		* sigtype: 0 
+	2. 账户定义数据结构：
 		- id: 账户ID。
 		- codetype: 源代码类型。
 			- 1:js

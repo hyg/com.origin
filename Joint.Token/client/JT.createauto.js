@@ -20,29 +20,27 @@ function makeauto(url){
 			data.createtime = new Date().toLocaleString();
 			data.remark = "ITW.auto";
 
-			puttoserver(auto);
-
+			posttoserver(data);
 		});
 		
 	});
 }
 
-function puttoserver(obj){
-	var putbody = new Object();
+function posttoserver(obj){
+	var item = new Object();
 	
-	putbody.cod = "";
-	putbody.tag = "auto";
-	putbody.author = "ITW";
-	putbody.index = -1;
-	putbody.cfg = yaml.safeDump(obj);;
+	item.cod = "ITW";
+	item.tag = "auto";
+	item.author = "huangyg";
+	item.data = obj;
 	
-	putbody = yaml.safeDump(putbody);
-	console.log(putbody);
+	body = yaml.safeDump(item);
+	console.log(body);
 	
 	var options = {
 	  hostname: config.server.url,
 	  port: config.server.port,
-	  method: 'PUT',
+	  method: 'POST',
 	  headers: {
 		'Content-Type': 'application/x-yaml'
 	  }
@@ -58,6 +56,6 @@ function puttoserver(obj){
 	  });
 	});
 
-	req.write(putbody);
+	req.write(body);
 	req.end();
 }

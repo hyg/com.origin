@@ -40,11 +40,12 @@ function listkey(b) {
 			var pubkey = openpgp.key.readArmored(nor.data.pubkey).keys[0];
 			pubuserinfo[pubkey.primaryKey.fingerprint] = pubkey.users[0].userId.userid;
 			pubfile[pubkey.primaryKey.fingerprint] = "post/"+item;
-		}else if(item.substr(0,5) == "auto."){
+	}else if((item.substr(item.indexOf(".")+1,5) == "auto.") || (item.substr(0,5) == "auto.")){
 			var auto = yaml.safeLoad(fs.readFileSync("post/"+item,'utf8'));
-			pubuserinfo[auto.data.id] = auto.author;
+			pubuserinfo[auto.data.id] = auto.cod;
 			pubfile[auto.data.id] = "post/"+item;
 		}
+		console.log(item.substr(item.indexOf("."),5));
 	});
 	
 	console.log("可选的付款人:")
