@@ -76,10 +76,11 @@ function postsync(finish) {
 									var a = require("./"+autofilename);
 									for (var event in auto.data.listener){
 										var lf = auto.data.listener[event] ;
-										console.log("a."+lf);
+										//console.log("a."+lf);
 										emitter.on(event,eval("a."+lf));
-										console.log(emitter);
+										//console.log(emitter);
 									}
+									//emitter.emit("year");
 								});
 							});
 						}

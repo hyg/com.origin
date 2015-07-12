@@ -6,7 +6,9 @@ var yaml = require('js-yaml');
 var http = require('http');
 var Hashes = require('jshashes');
 var check = require('./JT.check');
+var events = require('events');
 
+var emitter = new events.EventEmitter();
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 var secuserinfo = new Object();
 var pubuserinfo = new Object();
