@@ -14,6 +14,11 @@ var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 var PMID = "56bf5fcf1697d2f088dd1e4461660df5a37aa194"; // the PM
 
 exports.month = month;
+exports.year = year;
+
+function month(stream){
+	console.log("year() called");
+}
 
 function month(stream){
 	// check the log make sure it is the first
