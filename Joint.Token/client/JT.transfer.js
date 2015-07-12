@@ -10,6 +10,8 @@ var check = require('./JT.check');
 var config = yaml.safeLoad(fs.readFileSync('config.yaml', 'utf8'));
 var secuserinfo = new Object();
 var pubuserinfo = new Object();
+var secfile = new Object();
+var pubfile = new Object();
 var balance = new Object();
 
 check.getBalance(listkey);
@@ -26,22 +28,22 @@ function listkey(b) {
 		if (path.extname(item) === '.sec'){
 			var seckey = openpgp.key.readArmored(fs.readFileSync(item,'utf8')).keys[0];
 			secuserinfo[seckey.primaryKey.fingerprint] = seckey.users[0].userId.userid;
+			secfile[seckey.primaryKey.fingerprint] = item;
 		}
 	});
 	
-	files = fs.readdirSync("put/");
+	files = fs.readdirSync("post/");
 	// list the public key
 	files.forEach(function(item) {
 		if(item.substr(0,4) == "nor."){
-			var putbody = yaml.safeLoad(fs.readFileSync("put/"+item,'utf8'));
-			var cfg = yaml.safeLoad(putbody.cfg);
-			var pubkey = openpgp.key.readArmored(cfg.pubkey).keys[0];
+			var nor = yaml.safeLoad(fs.readFileSync("post/"+item,'utf8'));
+			var pubkey = openpgp.key.readArmored(nor.data.pubkey).keys[0];
 			pubuserinfo[pubkey.primaryKey.fingerprint] = pubkey.users[0].userId.userid;
+			pubfile[pubkey.primaryKey.fingerprint] = "post/"+item;
 		}else if(item.substr(0,5) == "auto."){
-			var putbody = yaml.safeLoad(fs.readFileSync("put/"+item,'utf8'));
-			var cfg = yaml.safeLoad(putbody.cfg);
-
-			pubuserinfo[cfg.id] = putbody.author;
+			var auto = yaml.safeLoad(fs.readFileSync("post/"+item,'utf8'));
+			pubuserinfo[auto.data.id] = auto.author;
+			pubfile[auto.data.id] = "post/"+item;
 		}
 	});
 	
@@ -69,17 +71,28 @@ function askandtransfer(){
 	var payer,payee,amount,passphrase;
 
 	rl.question("\n\n请输入付款人name：\n", function(answer) {
-		payer = answer;
+		for (var fingerprint in secuserinfo) {
+			if (fingerprint.indexOf(answer) == 0){
+				payer = fingerprint;
+			}
+		}
+		console.log(payer);
 		rl.question("请输入收款人name：\n", function(answer) {
-			payee = answer;
+			for (var fingerprint in pubuserinfo) {
+				if (fingerprint.indexOf(answer) == 0){
+					payee = fingerprint;
+				}
+			}
+			console.log(payee);
+
 			rl.question("请输入付款金额：\n", function(answer) {
 				var input = Number(answer);
 				if (isNaN(input)) {
 					console.log("金额不对呀");
 				} else {
 					amount = input;
-					var payerpubkey = openpgp.key.readArmored(fs.readFileSync(payer + ".pub",'utf8')).keys[0];
-					if(balance[payerpubkey.primaryKey.fingerprint] < amount) {
+					
+					if(balance[payer] < amount) {
 						console.log("余额不足。");
 						//return;
 						process.exit()
@@ -118,13 +131,14 @@ function askandtransfer(){
 */
 
 function transfer(payerid,payeeid,amount,passphrase){
-	var payersecfile = payerid + ".sec";
+	var payersecfile = secfile[payerid];
 	//var payerpubfile = payerid + ".pub";
 	var payerseckey = openpgp.key.readArmored(fs.readFileSync(payersecfile,'utf8')).keys[0];
 	//var payerpubkey = openpgp.key.readArmored(fs.readFileSync(payerpubfile,'utf8')).keys[0];
 	
-	var payeepubfile = payeeid + ".pub";
-	var payeepubkey = openpgp.key.readArmored(fs.readFileSync(payeepubfile,'utf8')).keys[0];
+	var payeepubfile = pubfile[payeeid];
+	var nor = yaml.safeLoad(fs.readFileSync(payeepubfile,'utf8'));
+	var payeepubkey = openpgp.key.readArmored(nor.data.pubkey).keys[0];
 	
 	var data = new Object();
 	var input = new Object();
