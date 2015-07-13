@@ -110,7 +110,10 @@ var server = http.createServer(function (req, res) {
 				res.end();
 			} else {
 				//fs.createReadStream(realPath).pipe(res)
-				fs.readFile(realPath, function(err, file){    
+				
+				var options = {encoding:'utf8'}
+				
+				fs.readFile(realPath,options, function(err, file){    
                     if ( err ) {    
                         res.writeHead(500, {'Content-Type': 'text/plain'});    
                         // res.write();    
