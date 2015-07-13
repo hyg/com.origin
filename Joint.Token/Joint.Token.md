@@ -85,6 +85,7 @@ Joint Token
 		- id: 账户ID。
 		- codetype: 源代码类型。
 		- codeurl: 源代码路径。
+		- listener：各事件的处理函数。
 		- createtime: 账户创建时间。
 		- remark: 备注文本。
 	2.  yaml范例：
