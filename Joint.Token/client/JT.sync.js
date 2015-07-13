@@ -60,6 +60,12 @@ function postsync(finish) {
 						fs.writeFileSync(filename,chunk);
 						console.log("post: "+filename+" saved.");
 						
+						// parse the yaml and get the createat field
+						// write into a object: [createat]filename
+						
+						// move the auto code to finish function
+						// sort the object and emit event one by one
+						
 						if((item.substr(item.indexOf(".")+1,5) == "auto.") || (item.substr(0,5) == "auto.")){
 							var auto = yaml.safeLoad(chunk);
 							var autofilename = item.substr(0,item.lastIndexOf(".")) + ".js" ;

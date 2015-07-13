@@ -39,10 +39,11 @@ var server = http.createServer(function (req, res) {
 			fs.exists(filename, function (exists) {
 				if (exists) {
 					res.writeHead(400, {'Content-Type': 'text/plain'});
-					res.write( "log fail: file "+filename+" exist.");
+					res.write( "post fail: file "+filename+" exist.");
 					res.end();
-					console.log("log fail: file "+filename+" exist.");
+					console.log("post fail: file "+filename+" exist.");
 				} else {
+					body.createat = new Date().getTime();
 					fs.writeFile(filename,yaml.safeDump(body),function(err){
 						if(err) throw err;
 						res.writeHead(201, {'Content-Type': 'text/plain'});
