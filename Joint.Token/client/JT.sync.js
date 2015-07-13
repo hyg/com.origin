@@ -51,6 +51,8 @@ function postsync(finish) {
 			
 			//console.log(postfileArray);
 			
+			var createtime = new Object();
+			
 			async.each(postfileArray, function (item, callback) {
 				var fileaddr = "http://"+config.server.url+":"+config.server.port+'/post/'+item;
 				var filename = "post/"+item;
@@ -62,16 +64,27 @@ function postsync(finish) {
 						
 						// parse the yaml and get the createat field
 						// write into a object: [createat]filename
+						var itemdata = yaml.safeLoad(chunk);
+						createtime[itemdata.createat] = item ;
 						
-						// move the auto code to finish function
-						// sort the object and emit event one by one
-						
+						callback();
+					});
+				}).on('error', function(e) {
+					console.log('problem with request: ' + e.message);
+				});
+			}, function (err) {
+				if( err ) {
+					console.log('post:A file failed to save');
+				} else {
+					// sort the object and emit event one by one
+					var sortedcreatetime = sortObject(createtime);
+					console.log(sortedcreatetime);
+					
+					for (var time in sortedcreatetime) {
+						var item = sortedcreatetime[time];
 						if((item.substr(item.indexOf(".")+1,5) == "auto.") || (item.substr(0,5) == "auto.")){
-							var auto = yaml.safeLoad(chunk);
+							var auto = yaml.safeLoad(fs.readFileSync("post/"+item, 'utf8'));
 							var autofilename = item.substr(0,item.lastIndexOf(".")) + ".js" ;
-							
-							
-							
 							
 							console.log("new auto account: download "+auto.data.codeurl+" and saved as "+autofilename);
 							var autoget = https.get(auto.data.codeurl,function(res) {
@@ -84,22 +97,15 @@ function postsync(finish) {
 										var lf = auto.data.listener[event] ;
 										//console.log("a."+lf);
 										emitter.on(event,eval("a."+lf));
-										//console.log(emitter);
+										console.log(emitter);
 									}
 									//emitter.emit("year");
 								});
 							});
 						}
-						
-						callback();
-					});
-				}).on('error', function(e) {
-					console.log('problem with request: ' + e.message);
-				});
-			}, function (err) {
-				if( err ) {
-					console.log('post:A file failed to save');
-				} else {
+					}
+					
+					
 					localPostIdx.update = new Date().toLocaleString();
 					fs.writeFileSync("post/index.yaml",yaml.safeDump(localPostIdx));
 					//console.log('post:All files have been saved successfully');
@@ -164,4 +170,22 @@ function putsync(finish) {
 	}).on('error', function(e) {
 	  console.log('problem with request: ' + e.message);
 	});
+}
+
+function sortObject(o) {
+    var sorted = {},
+    key, a = [];
+
+    for (key in o) {
+        if (o.hasOwnProperty(key)) {
+            a.push(key);
+        }
+    }
+
+    a.sort();
+
+    for (key = 0; key < a.length; key++) {
+        sorted[a[key]] = o[a[key]];
+    }
+    return sorted;
 }
