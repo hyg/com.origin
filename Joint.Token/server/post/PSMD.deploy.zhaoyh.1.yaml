@@ -1,0 +1,15 @@
+cod: PSMD
+tag: deploy
+author: zhaoyh
+data:
+  name: PSMD
+  id: lKYqzpU9uwGCxIG8cMiJaoRwyjDAnPCmPxhAI8jH34UOyX9+UAfQLDa93VIMunw3ly8uxflHeHUDhjqlZHjlSA==
+  codetype: 1
+  codeurl: 'https://raw.githubusercontent.com/xuemen/Infra/60d76cc1533e4570b31084a90fc0aac61d782034/local/PSMD.js'
+  listener:
+    postfile: postfile
+    postupdate: postupdate
+  createtime: 1437095828445
+  remark: PSMD.deploy
+sigtype: 0
+createat: 1437095828451

@@ -1,0 +1,5 @@
+tag: transfer
+author: aa26436def81807b316dfa3666c034f0fff04ab8
+sigtype: 2
+data: "\r\n-----BEGIN PGP SIGNED MESSAGE-----\r\nHash: SHA256\r\n\r\njtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806\r\ntype: 3\r\ninput:\r\n  id: aa26436def81807b316dfa3666c034f0fff04ab8\r\n  amount: 12344444\r\noutput:\r\n  id: 5fc796775b98edb1edb64331ac1a629264117d89\r\n  amount: 12344444\r\ntotal: 12344444\r\ntime: 1437095883596\r\nremark: transfer sample\r\n\r\n-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nwsBcBAEBCAAQBQJVqFfMCRBmwDTw//BKuAAA6bQH/3HWudAJf46lGgL3zvbz\ng7I9Ec20B21qwkuajanCpptjpFM1vrGQXT/WWM8SrL/MXqVF5i+nSLqvHg/N\ngqYs6phLje1Jp4yoSxfD1RPgP4ZF1rFowrvFbeQldc30kGycgredOioc4oDq\ndKdGDnYQlCFemrq/CusLZbM9Jj0JYHxrBU0nbuLbt5xwEmN+rtZp8cNi19mJ\naGNJLDEtjbX20Ek2UpzR7rK7mnRkm2/LZIfYz6UIR/ZxZHeNGmM5YrCklYCP\nYkeJxzKFNTfXbl8pkkGyGnCSSCy8+VwpmljF0YJ1+PaGFPPpjlfgpiKVHMpo\n6bLMuWyKOGL4X759YmiplYU=\r\n=1XZV\r\n-----END PGP SIGNATURE-----\r\n"
+createat: 1437095884213

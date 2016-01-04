@@ -1,0 +1,13 @@
+cod: ITW
+tag: auto
+author: huangyg
+data:
+  id: ZSVLRL3Q6U6ZCiF38PEjxeHjHJIsAjGpDYtmi9Q9e0B3JJ7fC8z//5YFoUX3ygSe+Jo/IM+01J8tJH9sFxrIDg==
+  codetype: 1
+  codeurl: 'https://raw.githubusercontent.com/hyg/com.origin/b05111d0f6469f8f0f4938942899bcdc19bcbe86/Joint.Token/client/ITW.auto.huangyg.1.js'
+  listener:
+    month: month
+    year: year
+  createtime: 1436700857969
+  remark: ITW.auto
+sigtype: 0

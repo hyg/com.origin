@@ -1,0 +1,14 @@
+cod: PSMD-1
+tag: auto
+author: zhaoyh
+data:
+  id: 3BuyYUZ8JJqDOWvjLhIZkAPTSmQZpVCHAgzl8zpofpEvyJW79S2WvbZ8F18JgOvA5Mt6nJCv8SroMFhymqjRWQ==
+  codetype: 1
+  codeurl: 'https://raw.githubusercontent.com/xuemen/Infra/60d76cc1533e4570b31084a90fc0aac61d782034/local/PSMD.auto.js'
+  listener:
+    postfile: postfile
+    postupdate: postupdate
+  createtime: 1437095794842
+  remark: PSMD-1.auto
+sigtype: 0
+createat: 1437095794860

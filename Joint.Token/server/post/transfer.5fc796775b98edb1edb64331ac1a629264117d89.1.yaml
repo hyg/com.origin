@@ -1,0 +1,5 @@
+tag: transfer
+author: 5fc796775b98edb1edb64331ac1a629264117d89
+sigtype: 2
+data: "\r\n-----BEGIN PGP SIGNED MESSAGE-----\r\nHash: SHA256\r\n\r\njtid: 1c636fec7bdfdcd6bb0a3fe049e160d354fe9806\r\ntype: 3\r\ninput:\r\n  id: 5fc796775b98edb1edb64331ac1a629264117d89\r\n  amount: 2000\r\noutput:\r\n  id: 4af3f01b3162941008741fc181bda02ef85e487d\r\n  amount: 2000\r\ntotal: 2000\r\ntime: 1437096377096\r\nremark: transfer sample\r\n\r\n-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js VERSION\r\nComment: http://openpgpjs.org\r\n\r\nwsBcBAEBCAAQBQJVqFm5CRCsGmKSZBF9iQAAhocIAK0CBdiJ7pS51Is1LpzU\n9Jtf+c+B0/nTJw1k73fGdYyfu5Eer5bZly+bQx/zuiYZBF7nEM5ucN0XtErW\nRqjray8DmMedVDiNIszP6h70X8btAqbndxuwRWs9OfYC6dEry8dKU9f4uGBC\nHOlgRYszE10XvEDheUdfKuWPjtW1KNueSxrgupULtIriYco+1UPvZ6sE7OCM\njacB/P7Xmf6Wj/aWGvEfFa9uwge880LwoWU20u2ZhM9DNrqYpI/n8ppPE2/S\nNvfVrn961Nkq1eiqzTmVgkEoMeLL8z7yt7arVNIfYWXw/5R1Tg813RkeeosP\nGU8nrBNzJs8/cv3pwAL0TIg=\r\n=bQpm\r\n-----END PGP SIGNATURE-----\r\n"
+createat: 1437096377678
