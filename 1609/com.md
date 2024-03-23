@@ -92,12 +92,12 @@
 	* 工作报告
 	* 具体规章
 	* worker名册（及合同）
-1. 本条款按照二级决策程序3.可修订。全体worker、RIU持有者选举。假设worker合同的报酬RIU总额为w，RIU总额为r，worker手中合同的每个RIU报酬权重为r\*(100-p)，RIU持有者持有每个RIU权重为w\*p。
+1. 本条款按照二级决策程序3.修订。全体worker、RIU持有者选举。假设worker合同的报酬RIU总额为w，RIU总额为r，worker手中合同的每个RIU报酬权重为r\*(100-p)，RIU持有者持有的每个RIU权重为w\*p。
 	* 如果deployer没有指定继任者又不能工作，选举新任deployer。
-1. 本条款按照二级决策程序3.可修订。全体worker、RIU持有者选举。假设worker合同的报酬RIU总额为w，RIU总额为r，席位为x，worker手中合同的每个RIU报酬权重为r\*x\*p，RIU持有持有的每个RIU权重为w\*x\*(100-p)。选举采用累积投票制，不对单独席位进行罢免投票，每次都全部重选。
+1. 本条款按照二级决策程序3.修订。全体worker、RIU持有者选举。假设worker合同的报酬RIU总额为w，RIU总额为r，席位为x，worker手中合同的每个RIU报酬权重为r\*x\*p，RIU持有者持有的每个RIU权重为w\*x\*(100-p)。选举采用累积投票制，不对单独席位进行罢免投票，每次都全部重选。
 	* 选举director
 	* 选举supervisor
-1. 本条款按照二级决策程序4.可修订。全体RIU持有者选举，以持有的RIU为权重。
+1. 本条款按照二级决策程序4.修订。全体RIU持有者选举，以持有的RIU为权重。
 	* 任免trustee。
 
 #### 保密制度
